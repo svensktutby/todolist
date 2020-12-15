@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { v1 } from 'uuid';
 import './App.css';
 import { Todolist } from './Todolist';
+import { AddItemForm } from './AddItemForm';
 
 export type TaskType = {
   id: string;
@@ -85,8 +86,8 @@ function App() {
     ],
   });
 
-  function removeTask(taskId: string, todoListID: string) {
-    tasks[todoListID] = tasks[todoListID].filter((t) => t.id !== taskId);
+  function removeTask(taskID: string, todoListID: string) {
+    tasks[todoListID] = tasks[todoListID].filter((t) => t.id !== taskID);
     setTasks({ ...tasks });
   }
 
@@ -102,11 +103,19 @@ function App() {
     setTasks({ ...tasks });
   }
 
-  function changeStatus(taskId: string, isDone: boolean, todoListID: string) {
+  function changeStatus(taskID: string, isDone: boolean, todoListID: string) {
     const todoListTasks = tasks[todoListID];
-    const task = todoListTasks.find((t) => t.id === taskId);
+    const task = todoListTasks.find((t) => t.id === taskID);
 
     task && (task.isDone = isDone);
+    setTasks({ ...tasks });
+  }
+
+  function changeTaskTitle(taskID: string, title: string, todoListID: string) {
+    const todoListTasks = tasks[todoListID];
+    const task = todoListTasks.find((t) => t.id === taskID);
+
+    task && (task.title = title);
     setTasks({ ...tasks });
   }
 
@@ -122,8 +131,27 @@ function App() {
     setTasks({ ...tasks });
   }
 
+  function addTodoList(title: string) {
+    const newTodoListID = v1();
+    const newTodoList: TodolistType = {
+      id: newTodoListID,
+      title,
+      filter: 'all',
+    };
+    setTodoLists([...todoLists, newTodoList]);
+    setTasks({ ...tasks, [newTodoListID]: [] });
+  }
+
+  function changeTodoListTitle(todoListID: string, title: string) {
+    const todoList = todoLists.find((tl) => tl.id === todoListID);
+    todoList && (todoList.title = title);
+    setTodoLists([...todoLists]);
+  }
+
   return (
     <div className="App">
+      <AddItemForm addItem={addTodoList} />
+
       {todoLists.map((tl) => {
         let tasksForTodolist = tasks[tl.id];
 
@@ -147,6 +175,8 @@ function App() {
             addTask={addTask}
             changeStatus={changeStatus}
             removeTodoList={removeTodoList}
+            changeTaskTitle={changeTaskTitle}
+            changeTodoListTitle={changeTodoListTitle}
           />
         );
       })}
