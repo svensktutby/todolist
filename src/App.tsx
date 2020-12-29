@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { v1 } from 'uuid';
-import './App.css';
-import { Todolist } from './Todolist';
-import { AddItemForm } from './AddItemForm';
+import React, { useState } from 'react'
+import { v1 } from 'uuid'
+import './App.css'
+import { Todolist } from './Todolist'
+import { AddItemForm } from './AddItemForm'
 import {
   AppBar,
   Button,
@@ -12,46 +12,46 @@ import {
   Paper,
   Toolbar,
   Typography,
-} from '@material-ui/core';
-import { Menu } from '@material-ui/icons';
+} from '@material-ui/core'
+import { Menu } from '@material-ui/icons'
 
 export type TaskType = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
+  id: string
+  title: string
+  isDone: boolean
+}
 
 type TaskStateType = {
-  [key: string]: Array<TaskType>;
-};
+  [key: string]: Array<TaskType>
+}
 
-export type FilterValuesType = 'all' | 'active' | 'completed';
+export type FilterValuesType = 'all' | 'active' | 'completed'
 
-type TodolistType = {
-  id: string;
-  title: string;
-  filter: FilterValuesType;
-};
+export type TodolistType = {
+  id: string
+  title: string
+  filter: FilterValuesType
+}
 
 function App() {
-  const todoListID1 = v1();
-  const todoListID2 = v1();
+  const todoListId1 = v1()
+  const todoListId2 = v1()
 
   const [todoLists, setTodoLists] = useState<Array<TodolistType>>([
     {
-      id: todoListID1,
+      id: todoListId1,
       title: 'What to learn',
       filter: 'all',
     },
     {
-      id: todoListID2,
+      id: todoListId2,
       title: 'What to buy',
       filter: 'all',
     },
-  ]);
+  ])
 
   const [tasks, setTasks] = useState<TaskStateType>({
-    [todoListID1]: [
+    [todoListId1]: [
       {
         id: v1(),
         title: 'HTML&CSS',
@@ -78,7 +78,7 @@ function App() {
         isDone: false,
       },
     ],
-    [todoListID2]: [
+    [todoListId2]: [
       {
         id: v1(),
         title: 'Beer',
@@ -95,68 +95,68 @@ function App() {
         isDone: false,
       },
     ],
-  });
+  })
 
-  function removeTask(taskID: string, todoListID: string) {
-    tasks[todoListID] = tasks[todoListID].filter((t) => t.id !== taskID);
-    setTasks({ ...tasks });
+  function removeTask(taskId: string, todoListId: string) {
+    tasks[todoListId] = tasks[todoListId].filter((t) => t.id !== taskId)
+    setTasks({ ...tasks })
   }
 
-  function addTask(title: string, todoListID: string) {
+  function addTask(title: string, todoListId: string) {
     const task: TaskType = {
       id: v1(),
       title: title,
       isDone: false,
-    };
+    }
 
-    tasks[todoListID] = [task, ...tasks[todoListID]];
+    tasks[todoListId] = [task, ...tasks[todoListId]]
 
-    setTasks({ ...tasks });
+    setTasks({ ...tasks })
   }
 
-  function changeStatus(taskID: string, isDone: boolean, todoListID: string) {
-    const todoListTasks = tasks[todoListID];
-    const task = todoListTasks.find((t) => t.id === taskID);
+  function changeStatus(taskId: string, isDone: boolean, todoListId: string) {
+    const todoListTasks = tasks[todoListId]
+    const task = todoListTasks.find((t) => t.id === taskId)
 
-    task && (task.isDone = isDone);
-    setTasks({ ...tasks });
+    task && (task.isDone = isDone)
+    setTasks({ ...tasks })
   }
 
-  function changeTaskTitle(taskID: string, title: string, todoListID: string) {
-    const todoListTasks = tasks[todoListID];
-    const task = todoListTasks.find((t) => t.id === taskID);
+  function changeTaskTitle(taskId: string, title: string, todoListId: string) {
+    const todoListTasks = tasks[todoListId]
+    const task = todoListTasks.find((t) => t.id === taskId)
 
-    task && (task.title = title);
-    setTasks({ ...tasks });
+    task && (task.title = title)
+    setTasks({ ...tasks })
   }
 
-  function changeFilter(filterValue: FilterValuesType, todoListID: string) {
-    const todoList = todoLists.find((tl) => tl.id === todoListID);
+  function changeFilter(filterValue: FilterValuesType, todoListId: string) {
+    const todoList = todoLists.find((tl) => tl.id === todoListId)
 
-    todoList && (todoList.filter = filterValue) && setTodoLists([...todoLists]);
+    todoList && (todoList.filter = filterValue) && setTodoLists([...todoLists])
   }
 
-  function removeTodoList(todoListID: string) {
-    setTodoLists(todoLists.filter((tl) => tl.id !== todoListID));
-    delete tasks[todoListID];
-    setTasks({ ...tasks });
+  function removeTodoList(todoListId: string) {
+    setTodoLists(todoLists.filter((tl) => tl.id !== todoListId))
+    delete tasks[todoListId]
+    setTasks({ ...tasks })
   }
 
   function addTodoList(title: string) {
-    const newTodoListID = v1();
+    const newtodoListId = v1()
     const newTodoList: TodolistType = {
-      id: newTodoListID,
+      id: newtodoListId,
       title,
       filter: 'all',
-    };
-    setTodoLists([...todoLists, newTodoList]);
-    setTasks({ ...tasks, [newTodoListID]: [] });
+    }
+    setTodoLists([...todoLists, newTodoList])
+    setTasks({ ...tasks, [newtodoListId]: [] })
   }
 
-  function changeTodoListTitle(todoListID: string, title: string) {
-    const todoList = todoLists.find((tl) => tl.id === todoListID);
-    todoList && (todoList.title = title);
-    setTodoLists([...todoLists]);
+  function changeTodoListTitle(todoListId: string, title: string) {
+    const todoList = todoLists.find((tl) => tl.id === todoListId)
+    todoList && (todoList.title = title)
+    setTodoLists([...todoLists])
   }
 
   return (
@@ -177,14 +177,14 @@ function App() {
 
         <Grid container spacing={3}>
           {todoLists.map((tl) => {
-            let tasksForTodolist = tasks[tl.id];
+            let tasksForTodolist = tasks[tl.id]
 
             if (tl.filter === 'active') {
-              tasksForTodolist = tasks[tl.id].filter((t) => !t.isDone);
+              tasksForTodolist = tasks[tl.id].filter((t) => !t.isDone)
             }
 
             if (tl.filter === 'completed') {
-              tasksForTodolist = tasks[tl.id].filter((t) => t.isDone);
+              tasksForTodolist = tasks[tl.id].filter((t) => t.isDone)
             }
 
             return (
@@ -205,12 +205,12 @@ function App() {
                   />
                 </Paper>
               </Grid>
-            );
+            )
           })}
         </Grid>
       </Container>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
