@@ -40,26 +40,25 @@ export const todolistsReducer = (
 
     case 'ADD_TODOLIST':
       return [
-        ...state,
         {
           id: action.todolistId,
           title: action.title,
           filter: 'all',
         },
+        ...state,
       ]
 
     case 'CHANGE_TODOLIST_TITLE': {
-      const todolist = state.find((tl) => tl.id === action.id)
-      todolist && (todolist.title = action.title)
-
-      return todolist ? [...state, todolist] : state
+      return state.map((tl) =>
+        tl.id === action.id ? { ...tl, title: action.title } : tl,
+      )
     }
 
     case 'CHANGE_TODOLIST_FILTER': {
       const todolist = state.find((tl) => tl.id === action.id)
       todolist && (todolist.filter = action.filter)
 
-      return todolist ? [...state, todolist] : state
+      return [...state]
     }
 
     default:
@@ -97,12 +96,12 @@ export const changeTodolistTitleAC = (
 }
 
 export const changeTodolistFilterAC = (
-  id: string,
   filter: FilterValuesType,
+  id: string,
 ): ChangeTodolistFilterActionType => {
   return {
     type: 'CHANGE_TODOLIST_FILTER',
-    id,
     filter,
+    id,
   }
 }

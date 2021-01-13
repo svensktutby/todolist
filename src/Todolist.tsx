@@ -10,13 +10,13 @@ type TodolistPropsType = {
   title: string
   tasks: Array<TaskType>
   filter: FilterValuesType
-  removeTodoList: (todoListId: string) => void
-  addTask: (title: string, todoListId: string) => void
-  removeTask: (taskId: string, todoListId: string) => void
-  changeFilter: (filterValue: FilterValuesType, todoListId: string) => void
-  changeStatus: (taskId: string, isDone: boolean, todoListId: string) => void
-  changeTaskTitle: (taskId: string, title: string, todoListId: string) => void
-  changeTodoListTitle: (todoListId: string, title: string) => void
+  removeTodoList: (todolistId: string) => void
+  addTask: (title: string, todolistId: string) => void
+  removeTask: (taskId: string, todolistId: string) => void
+  changeFilter: (filterValue: FilterValuesType, todolistId: string) => void
+  changeStatus: (taskId: string, isDone: boolean, todolistId: string) => void
+  changeTaskTitle: (taskId: string, title: string, todolistId: string) => void
+  changeTodoListTitle: (todolistId: string, title: string) => void
 }
 
 export function Todolist(props: TodolistPropsType) {
