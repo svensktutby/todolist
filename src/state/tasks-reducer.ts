@@ -1,4 +1,4 @@
-import { TasksStateType } from '../App'
+import { TasksStateType } from '../AppWithRedux'
 import { v1 } from 'uuid'
 import {
   AddTodolistActionType,
@@ -39,8 +39,10 @@ type ActionTypes =
   | AddTodolistActionType
   | RemoveTodolistActionType
 
+const initialState: TasksStateType = {}
+
 export const tasksReducer = (
-  state: TasksStateType,
+  state = initialState,
   action: ActionTypes,
 ): TasksStateType => {
   switch (action.type) {
@@ -85,8 +87,7 @@ export const tasksReducer = (
     }
 
     default:
-      // return state
-      throw new Error('An incorrect action type')
+      return state
   }
 }
 

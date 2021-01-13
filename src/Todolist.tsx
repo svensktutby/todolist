@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react'
-import { FilterValuesType, TaskType } from './App'
+import { FilterValuesType, TaskType } from './AppWithRedux'
 import { AddItemForm } from './AddItemForm'
 import { EditableSpan } from './EditableSpan'
 import { Delete } from '@material-ui/icons'
@@ -49,7 +49,7 @@ export function Todolist(props: TodolistPropsType) {
           color="primary"
           onChange={statusTaskHandler}
           checked={t.isDone}
-        />{' '}
+        />
         <EditableSpan value={t.title} getNewTitle={changeTaskTitle} />
         <IconButton onClick={removeTaskHandler} style={{ marginLeft: 'auto' }}>
           <Delete />

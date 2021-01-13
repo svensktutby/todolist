@@ -47,7 +47,7 @@ export type TodolistType = {
   filter: FilterValuesType
 }
 
-function AppWithReducers() {
+function AppWithRedux() {
   const todoListId1 = v1()
   const todoListId2 = v1()
 
@@ -201,4 +201,4 @@ function AppWithReducers() {
   )
 }
 
-export default AppWithReducers
+export default AppWithRedux
