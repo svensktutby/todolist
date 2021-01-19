@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 import { TextField } from '@material-ui/core';
 
 type EditableSpanPropsType = {
@@ -6,7 +6,7 @@ type EditableSpanPropsType = {
   getNewTitle: (title: string) => void;
 };
 
-export function EditableSpan(props: EditableSpanPropsType) {
+export const EditableSpan: FC<EditableSpanPropsType> = (props) => {
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState<string>(props.value);
 
@@ -18,7 +18,9 @@ export function EditableSpan(props: EditableSpanPropsType) {
     setEditMode(false);
     const newTitle = title.trim();
 
-    newTitle && props.getNewTitle(newTitle);
+    if (newTitle) {
+      props.getNewTitle(newTitle);
+    }
   };
 
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,4 +38,4 @@ export function EditableSpan(props: EditableSpanPropsType) {
   ) : (
     <span onDoubleClick={onEditMode}>{props.value}</span>
   );
-}
+};

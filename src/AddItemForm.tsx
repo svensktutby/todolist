@@ -1,4 +1,4 @@
-import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
+import React, { ChangeEvent, FC, KeyboardEvent, useState } from 'react';
 import { IconButton, TextField } from '@material-ui/core';
 import { AddBox } from '@material-ui/icons';
 
@@ -6,17 +6,10 @@ type AddItemFormPropsType = {
   addItem: (title: string) => void;
 };
 
-export function AddItemForm(props: AddItemFormPropsType) {
+export const AddItemForm: FC<AddItemFormPropsType> = (props) => {
   const [title, setTitle] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setError(null);
-    setTitle(e.currentTarget.value);
-  };
-  const keyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') addItem();
-  };
   const addItem = () => {
     const trimmedTitle = title.trim();
     if (trimmedTitle) {
@@ -25,6 +18,14 @@ export function AddItemForm(props: AddItemFormPropsType) {
       setError('Title is required!');
     }
     setTitle('');
+  };
+
+  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    setTitle(e.currentTarget.value);
+  };
+  const keyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') addItem();
   };
 
   return (
@@ -43,4 +44,4 @@ export function AddItemForm(props: AddItemFormPropsType) {
       </IconButton>
     </div>
   );
-}
+};
