@@ -6,7 +6,8 @@ type EditableSpanPropsType = {
   getNewTitle: (title: string) => void;
 };
 
-export const EditableSpan: FC<EditableSpanPropsType> = (props) => {
+export const EditableSpan: FC<EditableSpanPropsType> = React.memo((props) => {
+  console.log('EditableSpan is called');
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState<string>(props.value);
 
@@ -18,12 +19,10 @@ export const EditableSpan: FC<EditableSpanPropsType> = (props) => {
     setEditMode(false);
     const newTitle = title.trim();
 
-    if (newTitle) {
-      props.getNewTitle(newTitle);
-    }
+    if (newTitle) props.getNewTitle(newTitle);
   };
 
-  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const changeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
   };
 
@@ -32,10 +31,10 @@ export const EditableSpan: FC<EditableSpanPropsType> = (props) => {
       type="text"
       value={title}
       onBlur={offEditMode}
-      onChange={changeHandler}
+      onChange={changeTitleHandler}
       autoFocus
     />
   ) : (
     <span onDoubleClick={onEditMode}>{props.value}</span>
   );
-};
+});
