@@ -4,13 +4,7 @@ import { Button, ButtonGroup, IconButton } from '@material-ui/core';
 
 import { AddItemForm } from './AddItemForm';
 import { EditableSpan } from './EditableSpan';
-import { Task } from './Task';
-
-export type TaskType = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
+import { Task, TaskType } from './Task';
 
 export type TasksStateType = {
   [key: string]: Array<TaskType>;
@@ -85,9 +79,7 @@ export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
     return (
       <Task
         key={t.id}
-        taskId={t.id}
-        title={t.title}
-        isDone={t.isDone}
+        task={t}
         todolistId={props.id}
         removeTask={props.removeTask}
         changeTaskTitle={props.changeTaskTitle}

@@ -18,6 +18,8 @@ module.exports = {
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
+    page: true,
+    browser: true,
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -33,6 +35,19 @@ module.exports = {
       files: ['**/*.tsx'],
       rules: {
         'react/prop-types': 'off',
+      },
+    },
+    {
+      files: ['**/*.stories.tsx'],
+      rules: {
+        'import/no-default-export': 'off',
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+    {
+      files: ['./integration/*.js'],
+      parserOptions: {
+        project: './tsconfig.eslint.json',
       },
     },
   ],
