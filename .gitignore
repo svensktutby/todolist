@@ -27,3 +27,4 @@ yarn-error.log*
 .csscomb.json
 .prettierrc
 .prettierignore
+.env
