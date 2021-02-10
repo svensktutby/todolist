@@ -8,7 +8,7 @@ export default {
   title: 'Todolist/EditableSpan',
   component: EditableSpan,
   args: {
-    getNewTitle: action('Value EditableSpan changed'),
+    onChange: action('Value EditableSpan changed'),
   },
 } as Meta;
 

@@ -1,6 +1,6 @@
 import { createStore, combineReducers } from 'redux';
 import { tasksReducer } from './tasks-reducer';
-import { todolistsReducer } from './todolists-reducer';
+import { todolistsReducer } from './todolistsReducer';
 
 const rootReducer = combineReducers({
   todolists: todolistsReducer,

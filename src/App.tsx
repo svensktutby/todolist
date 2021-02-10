@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
-import { v1 } from 'uuid'
-import './App.css'
-import { Todolist } from './Todolist'
-import { AddItemForm } from './AddItemForm'
+import React, { useState } from 'react';
+import { v1 } from 'uuid';
+import { Menu } from '@material-ui/icons';
 import {
   AppBar,
   Button,
@@ -12,151 +10,188 @@ import {
   Paper,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import { Menu } from '@material-ui/icons'
+} from '@material-ui/core';
 
-export type TaskType = {
-  id: string
-  title: string
-  isDone: boolean
-}
+import './App.css';
+import { TasksStateType, Todolist } from './Todolist';
+import { AddItemForm } from './AddItemForm';
 
-export type TasksStateType = {
-  [key: string]: Array<TaskType>
-}
-
-export type FilterValuesType = 'all' | 'active' | 'completed'
-
-export type TodolistType = {
-  id: string
-  title: string
-  filter: FilterValuesType
-}
+import { TaskPriority, TaskStatus, TaskType } from './api/todolistsApi';
+import { FilterValuesType, TodolistDomainType } from './state/todolistsReducer';
 
 function App() {
-  const todoListId1 = v1()
-  const todoListId2 = v1()
+  const todoListId1 = v1();
+  const todoListId2 = v1();
 
-  const [todoLists, setTodoLists] = useState<Array<TodolistType>>([
+  const [todoLists, setTodoLists] = useState<Array<TodolistDomainType>>([
     {
       id: todoListId1,
       title: 'What to learn',
       filter: 'all',
+      addedDate: '',
+      order: 0,
     },
     {
       id: todoListId2,
       title: 'What to buy',
       filter: 'all',
+      addedDate: '',
+      order: 0,
     },
-  ])
+  ]);
 
   const [tasks, setTasks] = useState<TasksStateType>({
     [todoListId1]: [
       {
         id: v1(),
         title: 'HTML&CSS',
-        isDone: true,
+        status: TaskStatus.Completed,
+        todoListId: todoListId1,
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriority.Low,
       },
       {
         id: v1(),
         title: 'JS',
-        isDone: true,
+        status: TaskStatus.Completed,
+        todoListId: todoListId1,
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriority.Low,
       },
       {
         id: v1(),
         title: 'ReactJS',
-        isDone: false,
-      },
-      {
-        id: v1(),
-        title: 'rest api',
-        isDone: false,
-      },
-      {
-        id: v1(),
-        title: 'graphQL',
-        isDone: false,
+        status: TaskStatus.Completed,
+        todoListId: todoListId1,
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriority.Low,
       },
     ],
     [todoListId2]: [
       {
         id: v1(),
         title: 'Beer',
-        isDone: true,
+        status: TaskStatus.Completed,
+        todoListId: todoListId2,
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriority.Low,
       },
       {
         id: v1(),
         title: 'Cheese',
-        isDone: true,
+        status: TaskStatus.Completed,
+        todoListId: todoListId2,
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriority.Low,
       },
       {
         id: v1(),
         title: 'Sausage',
-        isDone: false,
+        status: TaskStatus.Completed,
+        todoListId: todoListId2,
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriority.Low,
       },
     ],
-  })
+  });
 
   function removeTask(taskId: string, todoListId: string) {
-    tasks[todoListId] = tasks[todoListId].filter((t) => t.id !== taskId)
-    setTasks({ ...tasks })
+    tasks[todoListId] = tasks[todoListId].filter((t) => t.id !== taskId);
+    setTasks({ ...tasks });
   }
 
   function addTask(title: string, todoListId: string) {
     const task: TaskType = {
       id: v1(),
-      title: title,
-      isDone: false,
-    }
+      title,
+      status: TaskStatus.New,
+      todoListId,
+      description: '',
+      startDate: '',
+      deadline: '',
+      addedDate: '',
+      order: 0,
+      priority: TaskPriority.Low,
+    };
 
-    tasks[todoListId] = [task, ...tasks[todoListId]]
+    tasks[todoListId] = [task, ...tasks[todoListId]];
 
-    setTasks({ ...tasks })
+    setTasks({ ...tasks });
   }
 
-  function changeStatus(taskId: string, isDone: boolean, todoListId: string) {
-    const todoListTasks = tasks[todoListId]
-    const task = todoListTasks.find((t) => t.id === taskId)
+  function changeStatus(
+    taskId: string,
+    status: TaskStatus,
+    todoListId: string,
+  ) {
+    const todoListTasks = tasks[todoListId];
+    const task = todoListTasks.find((t) => t.id === taskId);
 
-    task && (task.isDone = isDone)
-    setTasks({ ...tasks })
+    task && (task.status = status);
+    setTasks({ ...tasks });
   }
 
   function changeTaskTitle(taskId: string, title: string, todoListId: string) {
-    const todoListTasks = tasks[todoListId]
-    const task = todoListTasks.find((t) => t.id === taskId)
+    const todoListTasks = tasks[todoListId];
+    const task = todoListTasks.find((t) => t.id === taskId);
 
-    task && (task.title = title)
-    setTasks({ ...tasks })
+    task && (task.title = title);
+    setTasks({ ...tasks });
   }
 
   function changeFilter(filterValue: FilterValuesType, todoListId: string) {
-    const todoList = todoLists.find((tl) => tl.id === todoListId)
+    const todoList = todoLists.find((tl) => tl.id === todoListId);
 
-    todoList && (todoList.filter = filterValue) && setTodoLists([...todoLists])
+    todoList && (todoList.filter = filterValue) && setTodoLists([...todoLists]);
   }
 
   function removeTodoList(todoListId: string) {
-    setTodoLists(todoLists.filter((tl) => tl.id !== todoListId))
-    delete tasks[todoListId]
-    setTasks({ ...tasks })
+    setTodoLists(todoLists.filter((tl) => tl.id !== todoListId));
+    delete tasks[todoListId];
+    setTasks({ ...tasks });
   }
 
   function addTodoList(title: string) {
-    const newtodoListId = v1()
-    const newTodoList: TodolistType = {
+    const newtodoListId = v1();
+    const newTodoList: TodolistDomainType = {
       id: newtodoListId,
       title,
       filter: 'all',
-    }
-    setTodoLists([...todoLists, newTodoList])
-    setTasks({ ...tasks, [newtodoListId]: [] })
+      addedDate: '',
+      order: 0,
+    };
+    setTodoLists([...todoLists, newTodoList]);
+    setTasks({ ...tasks, [newtodoListId]: [] });
   }
 
   function changeTodoListTitle(todoListId: string, title: string) {
-    const todoList = todoLists.find((tl) => tl.id === todoListId)
-    todoList && (todoList.title = title)
-    setTodoLists([...todoLists])
+    const todoList = todoLists.find((tl) => tl.id === todoListId);
+    todoList && (todoList.title = title);
+    setTodoLists([...todoLists]);
   }
 
   return (
@@ -177,14 +212,18 @@ function App() {
 
         <Grid container spacing={3}>
           {todoLists.map((tl) => {
-            let tasksForTodolist = tasks[tl.id]
+            let tasksForTodolist = tasks[tl.id];
 
             if (tl.filter === 'active') {
-              tasksForTodolist = tasks[tl.id].filter((t) => !t.isDone)
+              tasksForTodolist = tasks[tl.id].filter(
+                (t) => t.status === TaskStatus.New,
+              );
             }
 
             if (tl.filter === 'completed') {
-              tasksForTodolist = tasks[tl.id].filter((t) => t.isDone)
+              tasksForTodolist = tasks[tl.id].filter(
+                (t) => t.status === TaskStatus.Completed,
+              );
             }
 
             return (
@@ -205,12 +244,12 @@ function App() {
                   />
                 </Paper>
               </Grid>
-            )
+            );
           })}
         </Grid>
       </Container>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -181,7 +181,6 @@ export const UpdateTaskTitle = () => {
   const model = {
     title,
     description,
-    completed,
     status,
     priority,
     startDate,
@@ -196,7 +195,7 @@ export const UpdateTaskTitle = () => {
 
   const style = {
     display: 'flex',
-    flexDirection: 'column' as 'column',
+    flexDirection: 'column' as const,
     width: 200,
     marginBottom: 20,
   };

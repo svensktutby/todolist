@@ -4,19 +4,15 @@ import { Button, ButtonGroup, IconButton } from '@material-ui/core';
 
 import { AddItemForm } from './AddItemForm';
 import { EditableSpan } from './EditableSpan';
-import { Task, TaskType } from './Task';
+import { Task } from './Task';
+import { TaskStatus, TaskType } from './api/todolistsApi';
+import { FilterValuesType } from './state/todolistsReducer';
 
-export type TasksStateType = {
+/* export type TasksStateType = {
   [key: string]: Array<TaskType>;
-};
+}; */
 
-export type FilterValuesType = 'all' | 'active' | 'completed';
-
-export type TodolistType = {
-  id: string;
-  title: string;
-  filter: FilterValuesType;
-};
+export type TasksStateType = Record<string, Array<TaskType>>;
 
 type TodolistPropsType = {
   id: string;
@@ -27,7 +23,11 @@ type TodolistPropsType = {
   addTask: (title: string, todolistId: string) => void;
   removeTask: (taskId: string, todolistId: string) => void;
   changeFilter: (filterValue: FilterValuesType, todolistId: string) => void;
-  changeStatus: (taskId: string, isDone: boolean, todolistId: string) => void;
+  changeStatus: (
+    taskId: string,
+    status: TaskStatus,
+    todolistId: string,
+  ) => void;
   changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
   changeTodoListTitle: (todolistId: string, title: string) => void;
 };
@@ -68,11 +68,13 @@ export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
   let tasksForTodolist = props.tasks;
 
   if (props.filter === 'active') {
-    tasksForTodolist = props.tasks.filter((t) => !t.isDone);
+    tasksForTodolist = props.tasks.filter((t) => t.status === TaskStatus.New);
   }
 
   if (props.filter === 'completed') {
-    tasksForTodolist = props.tasks.filter((t) => t.isDone);
+    tasksForTodolist = props.tasks.filter(
+      (t) => t.status === TaskStatus.Completed,
+    );
   }
 
   const tasks = tasksForTodolist.map((t) => {
@@ -91,7 +93,7 @@ export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
   return (
     <div>
       <h3 style={{ display: 'flex', alignItems: 'center' }}>
-        <EditableSpan value={props.title} getNewTitle={changeTodoListTitle} />
+        <EditableSpan value={props.title} onChange={changeTodoListTitle} />
         <IconButton
           onClick={removeTodoListHandler}
           style={{ marginLeft: 'auto' }}

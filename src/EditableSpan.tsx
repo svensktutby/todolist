@@ -3,7 +3,7 @@ import { TextField } from '@material-ui/core';
 
 export type EditableSpanPropsType = {
   value: string;
-  getNewTitle: (title: string) => void;
+  onChange: (title: string) => void;
 };
 
 export const EditableSpan: FC<EditableSpanPropsType> = React.memo((props) => {
@@ -19,7 +19,7 @@ export const EditableSpan: FC<EditableSpanPropsType> = React.memo((props) => {
     setEditMode(false);
     const newTitle = title.trim();
 
-    if (newTitle) props.getNewTitle(newTitle);
+    if (newTitle) props.onChange(newTitle);
   };
 
   const changeTitleHandler = (e: ChangeEvent<HTMLInputElement>) => {
