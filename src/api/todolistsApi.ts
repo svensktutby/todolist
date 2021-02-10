@@ -21,7 +21,7 @@ type ResponseType<D = Record<string, unknown>> = {
   data: D;
 };
 
-type UpdateTaskModelType = {
+export type UpdateTaskModelType = {
   title: string;
   description: string;
   completed: boolean;
@@ -91,9 +91,7 @@ export const todolistsAPI = {
   ): Promise<AxiosResponse<ResponseType>> {
     return API.put<ResponseType<{ item: TaskType }>>(
       `todo-lists/${todolistId}/tasks/${taskId}`,
-      {
-        model,
-      },
+      model,
     );
   },
 };
