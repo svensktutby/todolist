@@ -8,18 +8,10 @@ const API = axios.create({
   },
 });
 
-export type TodolistType = {
-  id: string;
-  title: string;
-  addedDate: string;
-  order: number;
-};
-
-type ResponseType<D = Record<string, unknown>> = {
-  resultCode: number;
-  messages: Array<string>;
-  data: D;
-};
+export enum ResultCode {
+  Success = 0,
+  Error = 1,
+}
 
 export enum TaskStatus {
   New = 0,
@@ -35,6 +27,13 @@ export enum TaskPriority {
   Urgently = 3,
   Later = 4,
 }
+
+export type TodolistType = {
+  id: string;
+  title: string;
+  addedDate: string;
+  order: number;
+};
 
 export type UpdateTaskModelType = {
   title: string;
@@ -52,18 +51,34 @@ export type TaskType = UpdateTaskModelType & {
   addedDate: string;
 };
 
+type TodolistResponseDataType = {
+  item: TodolistType;
+};
+
+type TaskResponseDataType = {
+  item: TaskType;
+};
+
 type TasksResponseType = {
   items: Array<TaskType>;
   totalCount: number;
   error: string | null;
 };
 
+type ResponseType<D = Record<string, unknown>> = {
+  resultCode: ResultCode;
+  messages: Array<string>;
+  data: D;
+};
+
 export const todolistsAPI = {
-  getTodolists(): Promise<AxiosResponse<TodolistType[]>> {
+  getTodolists(): Promise<AxiosResponse<Array<TodolistType>>> {
     return API.get<Array<TodolistType>>('todo-lists');
   },
-  createTodolist(title: string): Promise<AxiosResponse<ResponseType>> {
-    return API.post<ResponseType<{ item: TodolistType }>>('todo-lists', {
+  createTodolist(
+    title: string,
+  ): Promise<AxiosResponse<ResponseType<TodolistResponseDataType>>> {
+    return API.post<ResponseType<TodolistResponseDataType>>('todo-lists', {
       title,
     });
   },
@@ -84,8 +99,8 @@ export const todolistsAPI = {
   createTask(
     todolistId: string,
     title: string,
-  ): Promise<AxiosResponse<ResponseType>> {
-    return API.post<ResponseType<{ item: TaskType }>>(
+  ): Promise<AxiosResponse<ResponseType<TaskResponseDataType>>> {
+    return API.post<ResponseType<TaskResponseDataType>>(
       `todo-lists/${todolistId}/tasks`,
       {
         title,
@@ -102,8 +117,8 @@ export const todolistsAPI = {
     todolistId: string,
     taskId: string,
     model: UpdateTaskModelType,
-  ): Promise<AxiosResponse<ResponseType>> {
-    return API.put<ResponseType<{ item: TaskType }>>(
+  ): Promise<AxiosResponse<ResponseType<TaskResponseDataType>>> {
+    return API.put<ResponseType<TaskResponseDataType>>(
       `todo-lists/${todolistId}/tasks/${taskId}`,
       model,
     );

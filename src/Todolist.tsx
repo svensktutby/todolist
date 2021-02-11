@@ -1,4 +1,5 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Delete } from '@material-ui/icons';
 import { Button, ButtonGroup, IconButton } from '@material-ui/core';
 
@@ -7,12 +8,7 @@ import { EditableSpan } from './EditableSpan';
 import { Task } from './Task';
 import { TaskStatus, TaskType } from './api/todolistsApi';
 import { FilterValuesType } from './state/todolistsReducer';
-
-/* export type TasksStateType = {
-  [key: string]: Array<TaskType>;
-}; */
-
-export type TasksStateType = Record<string, Array<TaskType>>;
+import { fetchTasksAsync } from './state/tasksReducer';
 
 type TodolistPropsType = {
   id: string;
@@ -33,7 +29,12 @@ type TodolistPropsType = {
 };
 
 export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
-  console.log('Todolist is called');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTasksAsync(props.id));
+  }, [dispatch, props.id]);
+
   const addTask = useCallback(
     (title: string) => {
       props.addTask(title, props.id);

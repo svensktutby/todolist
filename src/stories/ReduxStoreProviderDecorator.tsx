@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { v1 } from 'uuid';
 
 import { AppRootStateType } from '../state/store';
-import { tasksReducer } from '../state/tasks-reducer';
+import { tasksReducer } from '../state/tasksReducer';
 import { todolistsReducer } from '../state/todolistsReducer';
 import { TaskPriority, TaskStatus } from '../api/todolistsApi';
 

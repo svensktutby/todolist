@@ -17,8 +17,6 @@ export type TaskPropsType = {
   changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
 };
 export const Task: FC<TaskPropsType> = React.memo((props) => {
-  console.log('Task is called');
-
   const removeTaskHandler = useCallback(() => {
     props.removeTask(props.task.id, props.todolistId);
   }, [props]);

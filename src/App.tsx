@@ -13,11 +13,12 @@ import {
 } from '@material-ui/core';
 
 import './App.css';
-import { TasksStateType, Todolist } from './Todolist';
+import { Todolist } from './Todolist';
 import { AddItemForm } from './AddItemForm';
 
 import { TaskPriority, TaskStatus, TaskType } from './api/todolistsApi';
 import { FilterValuesType, TodolistDomainType } from './state/todolistsReducer';
+import { TasksStateType } from './state/tasksReducer';
 
 function App() {
   const todoListId1 = v1();

@@ -22,18 +22,18 @@ import {
   changeTodolistTitleAC,
   FilterValuesType,
   removeTodolistAC,
+  TodolistDomainType,
   todolistsReducer,
 } from './state/todolistsReducer';
 import {
   addTaskAC,
-  changeTaskStatusAC,
-  changeTaskTitleAC,
   removeTaskAC,
   tasksReducer,
-} from './state/tasks-reducer';
+  updateTaskAC,
+} from './state/tasksReducer';
 import { TaskPriority, TaskStatus, TaskType } from './api/todolistsApi';
 
-function AppWithRedux() {
+export function AppWithReducer() {
   const todoListId1 = v1();
   const todoListId2 = v1();
 
@@ -138,7 +138,20 @@ function AppWithRedux() {
   }
 
   function addTask(title: string, todolistId: string) {
-    dispatchToTasks(addTaskAC(title, todolistId));
+    const task: TaskType = {
+      id: 'id exists',
+      title,
+      status: TaskStatus.New,
+      todoListId: todolistId,
+      description: '',
+      startDate: '',
+      deadline: '',
+      addedDate: '',
+      order: 0,
+      priority: TaskPriority.Low,
+    };
+
+    dispatchToTasks(addTaskAC(task));
   }
 
   function changeStatus(
@@ -146,11 +159,11 @@ function AppWithRedux() {
     status: TaskStatus,
     todolistId: string,
   ) {
-    dispatchToTasks(changeTaskStatusAC(taskId, status, todolistId));
+    dispatchToTasks(updateTaskAC(taskId, { status }, todolistId));
   }
 
   function changeTaskTitle(taskId: string, title: string, todolistId: string) {
-    dispatchToTasks(changeTaskTitleAC(taskId, title, todolistId));
+    dispatchToTasks(updateTaskAC(taskId, { title }, todolistId));
   }
 
   function changeFilter(filter: FilterValuesType, id: string) {
@@ -168,7 +181,15 @@ function AppWithRedux() {
   }
 
   function addTodoList(title: string) {
-    const action = addTodolistAC(title);
+    const todolist: TodolistDomainType = {
+      id: 'id exists',
+      title,
+      addedDate: '',
+      order: 0,
+      filter: 'all',
+    };
+
+    const action = addTodolistAC(todolist);
     dispatchToTasks(action);
     dispatchToTodolists(action);
   }
@@ -230,5 +251,3 @@ function AppWithRedux() {
     </div>
   );
 }
-
-export default AppWithRedux;
