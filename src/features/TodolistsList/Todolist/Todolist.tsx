@@ -3,12 +3,12 @@ import { useDispatch } from 'react-redux';
 import { Delete } from '@material-ui/icons';
 import { Button, ButtonGroup, IconButton } from '@material-ui/core';
 
-import { AddItemForm } from './AddItemForm';
-import { EditableSpan } from './EditableSpan';
-import { Task } from './Task';
-import { TaskStatus, TaskType } from './api/todolistsApi';
-import { FilterValuesType } from './state/todolistsReducer';
-import { fetchTasksAsync } from './state/tasksReducer';
+import { AddItemForm } from '../../../components/AddItemForm/AddItemForm';
+import { EditableSpan } from '../../../components/EditableSpan/EditableSpan';
+import { Task } from './Task/Task';
+import { TaskStatus, TaskType } from '../../../api/todolistsApi';
+import { FilterValuesType } from '../todolistsReducer';
+import { fetchTasksAsync } from '../tasksReducer';
 
 type TodolistPropsType = {
   id: string;

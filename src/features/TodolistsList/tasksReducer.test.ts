@@ -12,7 +12,7 @@ import {
   setTodolistsAC,
   TodolistDomainType,
 } from './todolistsReducer';
-import { TaskPriority, TaskStatus, TaskType } from '../api/todolistsApi';
+import { TaskPriority, TaskStatus, TaskType } from '../../api/todolistsApi';
 
 const todolistId1 = 'todolistId1';
 const todolistId2 = 'todolistId2';

@@ -1,20 +1,8 @@
 import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  AppBar,
-  Button,
-  Container,
-  Grid,
-  IconButton,
-  Paper,
-  Toolbar,
-  Typography,
-} from '@material-ui/core';
-import { Menu } from '@material-ui/icons';
+import { Grid, Paper } from '@material-ui/core';
 
-import './App.css';
-import { Todolist } from './Todolist';
-import { AddItemForm } from './AddItemForm';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 import {
   addTodolistAsync,
   changeTodolistFilterAC,
@@ -23,17 +11,18 @@ import {
   FilterValuesType,
   removeTodolistAsync,
   TodolistDomainType,
-} from './state/todolistsReducer';
+} from './todolistsReducer';
 import {
   addTaskAsync,
   removeTaskAsync,
   TasksStateType,
   updateTaskAsync,
-} from './state/tasksReducer';
-import { TaskStatus } from './api/todolistsApi';
-import { useTypedSelector } from './hooks/useTypedSelector';
+} from './tasksReducer';
+import { TaskStatus } from '../../api/todolistsApi';
+import { AddItemForm } from '../../components/AddItemForm/AddItemForm';
+import { Todolist } from './Todolist/Todolist';
 
-export const AppWithRedux: FC = () => {
+export const TodolistsList: FC = () => {
   const todolists = useTypedSelector<Array<TodolistDomainType>>(
     (state) => state.todolists,
   );
@@ -102,47 +91,36 @@ export const AppWithRedux: FC = () => {
   );
 
   return (
-    <div className="App">
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <Menu />
-          </IconButton>
-          <Typography variant="h6">News</Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-      <Container fixed>
-        <Grid container style={{ padding: 20 }}>
-          <AddItemForm addItem={addTodoList} />
-        </Grid>
+    <>
+      <Grid container style={{ padding: 20 }}>
+        <AddItemForm addItem={addTodoList} />
+      </Grid>
 
-        <Grid container spacing={3}>
-          {todolists.map((tl) => {
-            const tasksForTodolist = tasks[tl.id];
+      <Grid container spacing={3}>
+        {todolists.map((tl) => {
+          const tasksForTodolist = tasks[tl.id];
 
-            return (
-              <Grid item key={tl.id}>
-                <Paper style={{ padding: 10 }}>
-                  <Todolist
-                    id={tl.id}
-                    title={tl.title}
-                    filter={tl.filter}
-                    tasks={tasksForTodolist}
-                    removeTask={removeTask}
-                    changeFilter={changeFilter}
-                    addTask={addTask}
-                    changeStatus={changeStatus}
-                    removeTodoList={removeTodoList}
-                    changeTaskTitle={changeTaskTitle}
-                    changeTodoListTitle={changeTodoListTitle}
-                  />
-                </Paper>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
-    </div>
+          return (
+            <Grid item key={tl.id}>
+              <Paper style={{ padding: 10 }}>
+                <Todolist
+                  id={tl.id}
+                  title={tl.title}
+                  filter={tl.filter}
+                  tasks={tasksForTodolist}
+                  removeTask={removeTask}
+                  changeFilter={changeFilter}
+                  addTask={addTask}
+                  changeStatus={changeStatus}
+                  removeTodoList={removeTodoList}
+                  changeTaskTitle={changeTaskTitle}
+                  changeTodoListTitle={changeTodoListTitle}
+                />
+              </Paper>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </>
   );
 };

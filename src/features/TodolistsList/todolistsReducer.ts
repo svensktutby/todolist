@@ -1,8 +1,8 @@
 /* eslint-disable import/no-cycle */
-import { ThunkType } from './store';
+import { ThunkType } from '../../app/store';
 /* eslint-enable import/no-cycle */
 
-import { ResultCode, todolistsAPI, TodolistType } from '../api/todolistsApi';
+import { ResultCode, todolistsAPI, TodolistType } from '../../api/todolistsApi';
 
 export enum ActionType {
   REMOVE_TODOLIST = 'TL/TODOLISTS/REMOVE_TODOLIST',
@@ -11,11 +11,6 @@ export enum ActionType {
   CHANGE_TODOLIST_FILTER = 'TL/TODOLISTS/CHANGE_TODOLIST_FILTER',
   SET_TODOLISTS = 'TL/TODOLISTS/SET_TODOLISTS',
 }
-
-export type FilterValuesType = 'all' | 'active' | 'completed';
-export type TodolistDomainType = TodolistType & {
-  filter: FilterValuesType;
-};
 
 const initialState: Array<TodolistDomainType> = [];
 
@@ -36,36 +31,34 @@ export const todolistsReducer = (
         ...state,
       ];
 
-    case ActionType.CHANGE_TODOLIST_TITLE: {
+    case ActionType.CHANGE_TODOLIST_TITLE:
       return state.map((tl) =>
         tl.id === action.payload.id
           ? { ...tl, title: action.payload.title }
           : tl,
       );
-    }
 
-    case ActionType.CHANGE_TODOLIST_FILTER: {
+    case ActionType.CHANGE_TODOLIST_FILTER:
       return state.map((tl) =>
         tl.id === action.payload.id
           ? { ...tl, filter: action.payload.filter }
           : tl,
       );
-    }
 
-    case ActionType.SET_TODOLISTS: {
+    case ActionType.SET_TODOLISTS:
       return action.payload.todolists.map((tl) => ({ ...tl, filter: 'all' }));
-    }
 
     default:
       return state;
   }
 };
 
-export const removeTodolistAC = (todolistId: string) =>
+/** Actions */
+export const removeTodolistAC = (id: string) =>
   ({
     type: ActionType.REMOVE_TODOLIST,
     payload: {
-      id: todolistId,
+      id,
     },
   } as const);
 
@@ -103,14 +96,7 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) =>
     },
   } as const);
 
-type ActionsType =
-  | ReturnType<typeof removeTodolistAC>
-  | ReturnType<typeof addTodolistAC>
-  | ReturnType<typeof changeTodolistTitleAC>
-  | ReturnType<typeof changeTodolistFilterAC>
-  | ReturnType<typeof setTodolistsAC>;
-
-// Thunk
+/** Thunks */
 export const fetchTodolistsAsync = (): ThunkType<ActionsType> => async (
   dispatch,
 ) => {
@@ -156,4 +142,17 @@ export const changeTodolistTitleAsync = (
   if (resultCode === ResultCode.Success) {
     dispatch(changeTodolistTitleAC(id, title));
   }
+};
+
+/** Types */
+type ActionsType =
+  | ReturnType<typeof removeTodolistAC>
+  | ReturnType<typeof addTodolistAC>
+  | ReturnType<typeof changeTodolistTitleAC>
+  | ReturnType<typeof changeTodolistFilterAC>
+  | ReturnType<typeof setTodolistsAC>;
+
+export type FilterValuesType = 'all' | 'active' | 'completed';
+export type TodolistDomainType = TodolistType & {
+  filter: FilterValuesType;
 };

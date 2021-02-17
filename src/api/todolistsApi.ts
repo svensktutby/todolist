@@ -8,6 +8,61 @@ const API = axios.create({
   },
 });
 
+export const todolistsAPI = {
+  getTodolists(): Promise<AxiosResponse<Array<TodolistType>>> {
+    return API.get<Array<TodolistType>>('todo-lists');
+  },
+  createTodolist(
+    title: string,
+  ): Promise<AxiosResponse<ResponseType<TodolistResponseDataType>>> {
+    return API.post<ResponseType<TodolistResponseDataType>>('todo-lists', {
+      title,
+    });
+  },
+  deleteTodolist(id: string): Promise<AxiosResponse<ResponseType>> {
+    return API.delete<ResponseType>(`todo-lists/${id}`);
+  },
+  updateTodolistTitle(
+    id: string,
+    title: string,
+  ): Promise<AxiosResponse<ResponseType>> {
+    return API.put<ResponseType>(`todo-lists/${id}`, {
+      title,
+    });
+  },
+  getTasks(todolistId: string): Promise<AxiosResponse<TasksResponseType>> {
+    return API.get<TasksResponseType>(`todo-lists/${todolistId}/tasks`);
+  },
+  createTask(
+    todolistId: string,
+    title: string,
+  ): Promise<AxiosResponse<ResponseType<TaskResponseDataType>>> {
+    return API.post<ResponseType<TaskResponseDataType>>(
+      `todo-lists/${todolistId}/tasks`,
+      {
+        title,
+      },
+    );
+  },
+  deleteTask(
+    todolistId: string,
+    taskId: string,
+  ): Promise<AxiosResponse<ResponseType>> {
+    return API.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`);
+  },
+  updateTask(
+    todolistId: string,
+    taskId: string,
+    model: UpdateTaskModelType,
+  ): Promise<AxiosResponse<ResponseType<TaskResponseDataType>>> {
+    return API.put<ResponseType<TaskResponseDataType>>(
+      `todo-lists/${todolistId}/tasks/${taskId}`,
+      model,
+    );
+  },
+};
+
+/** Types */
 export enum ResultCode {
   Success = 0,
   Error = 1,
@@ -69,58 +124,4 @@ type ResponseType<D = Record<string, unknown>> = {
   resultCode: ResultCode;
   messages: Array<string>;
   data: D;
-};
-
-export const todolistsAPI = {
-  getTodolists(): Promise<AxiosResponse<Array<TodolistType>>> {
-    return API.get<Array<TodolistType>>('todo-lists');
-  },
-  createTodolist(
-    title: string,
-  ): Promise<AxiosResponse<ResponseType<TodolistResponseDataType>>> {
-    return API.post<ResponseType<TodolistResponseDataType>>('todo-lists', {
-      title,
-    });
-  },
-  deleteTodolist(id: string): Promise<AxiosResponse<ResponseType>> {
-    return API.delete<ResponseType>(`todo-lists/${id}`);
-  },
-  updateTodolistTitle(
-    id: string,
-    title: string,
-  ): Promise<AxiosResponse<ResponseType>> {
-    return API.put<ResponseType>(`todo-lists/${id}`, {
-      title,
-    });
-  },
-  getTasks(todolistId: string): Promise<AxiosResponse<TasksResponseType>> {
-    return API.get<TasksResponseType>(`todo-lists/${todolistId}/tasks`);
-  },
-  createTask(
-    todolistId: string,
-    title: string,
-  ): Promise<AxiosResponse<ResponseType<TaskResponseDataType>>> {
-    return API.post<ResponseType<TaskResponseDataType>>(
-      `todo-lists/${todolistId}/tasks`,
-      {
-        title,
-      },
-    );
-  },
-  deleteTask(
-    todolistId: string,
-    taskId: string,
-  ): Promise<AxiosResponse<ResponseType>> {
-    return API.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`);
-  },
-  updateTask(
-    todolistId: string,
-    taskId: string,
-    model: UpdateTaskModelType,
-  ): Promise<AxiosResponse<ResponseType<TaskResponseDataType>>> {
-    return API.put<ResponseType<TaskResponseDataType>>(
-      `todo-lists/${todolistId}/tasks/${taskId}`,
-      model,
-    );
-  },
 };
