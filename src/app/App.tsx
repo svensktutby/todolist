@@ -8,27 +8,29 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { Menu } from '@material-ui/icons';
 
 import './App.css';
 import { TodolistsList } from '../features/TodolistsList/TodolistsList';
 
-const styles = {
+const useStyles = makeStyles(() => ({
   AppBar: {
     position: 'relative',
-  } as const,
+  },
   LinearProgress: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-  } as const,
-};
+  },
+}));
 
 export const App: FC = () => {
+  const classes = useStyles();
   return (
     <div className="App">
-      <AppBar position="static" style={styles.AppBar}>
+      <AppBar position="static" className={classes.AppBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu">
             <Menu />
@@ -36,7 +38,7 @@ export const App: FC = () => {
           <Typography variant="h6">News</Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
-        <LinearProgress style={styles.LinearProgress} />
+        <LinearProgress className={classes.LinearProgress} />
       </AppBar>
       <Container fixed>
         <TodolistsList />

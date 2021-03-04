@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Grid, Paper } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import {
@@ -22,16 +23,18 @@ import { TaskStatus } from '../../api/todolistsApi';
 import { AddItemForm } from '../../components/AddItemForm/AddItemForm';
 import { Todolist } from './Todolist/Todolist';
 
-const styles = {
+const useStyles = makeStyles((theme: Theme) => ({
   GridContainer: {
-    padding: 20,
+    padding: theme.spacing(2),
   },
   Paper: {
-    padding: 10,
+    padding: theme.spacing(2),
   },
-};
+}));
 
 export const TodolistsList: FC = () => {
+  const classes = useStyles();
+
   const todolists = useTypedSelector<Array<TodolistDomainType>>(
     (state) => state.todolists,
   );
@@ -101,7 +104,7 @@ export const TodolistsList: FC = () => {
 
   return (
     <>
-      <Grid container style={styles.GridContainer}>
+      <Grid container className={classes.GridContainer}>
         <AddItemForm addItem={addTodoList} />
       </Grid>
 
@@ -111,7 +114,7 @@ export const TodolistsList: FC = () => {
 
           return (
             <Grid item key={tl.id}>
-              <Paper style={styles.Paper}>
+              <Paper className={classes.Paper}>
                 <Todolist
                   id={tl.id}
                   title={tl.title}

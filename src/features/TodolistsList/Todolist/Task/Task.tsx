@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FC, useCallback } from 'react';
 import { Checkbox, IconButton } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { Delete } from '@material-ui/icons';
 
 import { EditableSpan } from '../../../../components/EditableSpan/EditableSpan';
@@ -17,7 +18,7 @@ export type TaskPropsType = {
   changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
 };
 
-const styles = {
+const useStyles = makeStyles(() => ({
   Task: {
     display: 'flex',
     alignItems: 'center',
@@ -25,9 +26,11 @@ const styles = {
   IconButton: {
     marginLeft: 'auto',
   },
-};
+}));
 
 export const Task: FC<TaskPropsType> = React.memo((props) => {
+  const classes = useStyles();
+
   const removeTaskHandler = useCallback(() => {
     props.removeTask(props.task.id, props.todolistId);
   }, [props]);
@@ -52,8 +55,9 @@ export const Task: FC<TaskPropsType> = React.memo((props) => {
 
   return (
     <li
-      className={props.task.status === TaskStatus.Completed ? 'is-done' : ''}
-      style={styles.Task}
+      className={`${classes.Task} ${
+        props.task.status === TaskStatus.Completed ? 'is-done' : ''
+      }`}
     >
       <Checkbox
         color="primary"
@@ -61,7 +65,7 @@ export const Task: FC<TaskPropsType> = React.memo((props) => {
         checked={props.task.status === TaskStatus.Completed}
       />
       <EditableSpan value={props.task.title} onChange={changeTaskTitle} />
-      <IconButton onClick={removeTaskHandler} style={styles.IconButton}>
+      <IconButton onClick={removeTaskHandler} className={classes.IconButton}>
         <Delete />
       </IconButton>
     </li>
