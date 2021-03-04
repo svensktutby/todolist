@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Delete } from '@material-ui/icons';
-import { Button, ButtonGroup, IconButton } from '@material-ui/core';
+import { Button, ButtonGroup, IconButton, Typography } from '@material-ui/core';
 
 import { AddItemForm } from '../../../components/AddItemForm/AddItemForm';
 import { EditableSpan } from '../../../components/EditableSpan/EditableSpan';
@@ -26,6 +26,29 @@ type TodolistPropsType = {
   ) => void;
   changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
   changeTodoListTitle: (todolistId: string, title: string) => void;
+};
+
+const styles = {
+  TodoListTitle: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  TodoListTitleIconButton: {
+    marginLeft: 'auto',
+  },
+  TaskList: {
+    paddingLeft: 0,
+    listStyleType: 'none',
+  },
+  ButtonGroupWrapper: {
+    textAlign: 'center',
+  } as const,
+  ButtonGroup: {
+    display: 'flex',
+  },
+  Button: {
+    flexGrow: 1,
+  },
 };
 
 export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
@@ -93,37 +116,37 @@ export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
 
   return (
     <div>
-      <h3 style={{ display: 'flex', alignItems: 'center' }}>
+      <Typography variant="h6" style={styles.TodoListTitle}>
         <EditableSpan value={props.title} onChange={changeTodoListTitle} />
         <IconButton
           onClick={removeTodoListHandler}
-          style={{ marginLeft: 'auto' }}
+          style={styles.TodoListTitleIconButton}
         >
           <Delete />
         </IconButton>
-      </h3>
+      </Typography>
       <AddItemForm addItem={addTask} />
-      <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>{tasks}</ul>
-      <div style={{ textAlign: 'center' }}>
-        <ButtonGroup size="small" color="primary" style={{ display: 'flex' }}>
+      <ul style={styles.TaskList}>{tasks}</ul>
+      <div style={styles.ButtonGroupWrapper}>
+        <ButtonGroup size="small" color="primary" style={styles.ButtonGroup}>
           <Button
             variant={props.filter === 'all' ? 'contained' : 'outlined'}
             onClick={allClickHandler}
-            style={{ flexGrow: 1 }}
+            style={styles.Button}
           >
             All
           </Button>
           <Button
             variant={props.filter === 'active' ? 'contained' : 'outlined'}
             onClick={activeClickHandler}
-            style={{ flexGrow: 1 }}
+            style={styles.Button}
           >
             Active
           </Button>
           <Button
             variant={props.filter === 'completed' ? 'contained' : 'outlined'}
             onClick={completedClickHandler}
-            style={{ flexGrow: 1 }}
+            style={styles.Button}
           >
             Completed
           </Button>

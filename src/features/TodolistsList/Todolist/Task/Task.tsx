@@ -16,6 +16,17 @@ export type TaskPropsType = {
   ) => void;
   changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
 };
+
+const styles = {
+  Task: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  IconButton: {
+    marginLeft: 'auto',
+  },
+};
+
 export const Task: FC<TaskPropsType> = React.memo((props) => {
   const removeTaskHandler = useCallback(() => {
     props.removeTask(props.task.id, props.todolistId);
@@ -42,7 +53,7 @@ export const Task: FC<TaskPropsType> = React.memo((props) => {
   return (
     <li
       className={props.task.status === TaskStatus.Completed ? 'is-done' : ''}
-      style={{ display: 'flex', alignItems: 'center' }}
+      style={styles.Task}
     >
       <Checkbox
         color="primary"
@@ -50,7 +61,7 @@ export const Task: FC<TaskPropsType> = React.memo((props) => {
         checked={props.task.status === TaskStatus.Completed}
       />
       <EditableSpan value={props.task.title} onChange={changeTaskTitle} />
-      <IconButton onClick={removeTaskHandler} style={{ marginLeft: 'auto' }}>
+      <IconButton onClick={removeTaskHandler} style={styles.IconButton}>
         <Delete />
       </IconButton>
     </li>

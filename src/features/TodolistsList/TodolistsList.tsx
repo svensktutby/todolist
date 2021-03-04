@@ -22,6 +22,15 @@ import { TaskStatus } from '../../api/todolistsApi';
 import { AddItemForm } from '../../components/AddItemForm/AddItemForm';
 import { Todolist } from './Todolist/Todolist';
 
+const styles = {
+  GridContainer: {
+    padding: 20,
+  },
+  Paper: {
+    padding: 10,
+  },
+};
+
 export const TodolistsList: FC = () => {
   const todolists = useTypedSelector<Array<TodolistDomainType>>(
     (state) => state.todolists,
@@ -92,7 +101,7 @@ export const TodolistsList: FC = () => {
 
   return (
     <>
-      <Grid container style={{ padding: 20 }}>
+      <Grid container style={styles.GridContainer}>
         <AddItemForm addItem={addTodoList} />
       </Grid>
 
@@ -102,7 +111,7 @@ export const TodolistsList: FC = () => {
 
           return (
             <Grid item key={tl.id}>
-              <Paper style={{ padding: 10 }}>
+              <Paper style={styles.Paper}>
                 <Todolist
                   id={tl.id}
                   title={tl.title}
