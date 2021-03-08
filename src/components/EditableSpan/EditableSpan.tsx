@@ -1,12 +1,22 @@
 import React, { ChangeEvent, FC, useState } from 'react';
-import { TextField } from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 export type EditableSpanPropsType = {
   value: string;
   onChange: (title: string) => void;
 };
 
+const useStyles = makeStyles(() => ({
+  text: {
+    wordBreak: 'break-word',
+    fontSize: '1rem',
+  },
+}));
+
 export const EditableSpan: FC<EditableSpanPropsType> = React.memo((props) => {
+  const classes = useStyles();
+
   const [editMode, setEditMode] = useState(false);
   const [title, setTitle] = useState<string>(props.value);
 
@@ -34,6 +44,12 @@ export const EditableSpan: FC<EditableSpanPropsType> = React.memo((props) => {
       autoFocus
     />
   ) : (
-    <span onDoubleClick={onEditMode}>{props.value}</span>
+    <Typography
+      variant="caption"
+      className={classes.text}
+      onDoubleClick={onEditMode}
+    >
+      {props.value}
+    </Typography>
   );
 });

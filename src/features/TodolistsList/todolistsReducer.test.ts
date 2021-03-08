@@ -23,6 +23,7 @@ describe('todolists reducer', () => {
         addedDate: '',
         order: 0,
         filter: 'all',
+        entityStatus: 'idle',
       },
       {
         id: todolistId2,
@@ -30,6 +31,7 @@ describe('todolists reducer', () => {
         addedDate: '',
         order: 0,
         filter: 'all',
+        entityStatus: 'idle',
       },
     ];
   });
@@ -51,6 +53,7 @@ describe('todolists reducer', () => {
       addedDate: '',
       order: 0,
       filter: 'all',
+      entityStatus: 'idle',
     };
 
     const endState = todolistsReducer(startState, addTodolistAC(todolist));
@@ -95,6 +98,7 @@ describe('todolists reducer', () => {
       filter: 'all',
       addedDate: '',
       order: 0,
+      entityStatus: 'idle',
     });
     expect(endState).toHaveLength(2);
   });

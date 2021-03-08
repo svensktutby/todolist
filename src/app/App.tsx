@@ -12,9 +12,10 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { Menu } from '@material-ui/icons';
 
-import './App.css';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { TodolistsList } from '../features/TodolistsList/TodolistsList';
 import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
+import { RequestStatusType } from './appReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,6 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const App: FC = () => {
   const classes = useStyles();
+
+  const status = useTypedSelector<RequestStatusType>(
+    (state) => state.app.status,
+  );
+
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
@@ -57,7 +63,10 @@ export const App: FC = () => {
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
-        <LinearProgress className={classes.linearProgress} />
+
+        {status === 'loading' && (
+          <LinearProgress className={classes.linearProgress} />
+        )}
       </AppBar>
       <Container fixed>
         <TodolistsList />

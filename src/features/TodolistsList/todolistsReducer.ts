@@ -3,6 +3,7 @@ import { ThunkType } from '../../app/store';
 /* eslint-enable import/no-cycle */
 
 import { ResultCode, todolistsAPI, TodolistType } from '../../api/todolistsApi';
+import { RequestStatusType, setStatusAC } from '../../app/appReducer';
 
 export enum ActionType {
   REMOVE_TODOLIST = 'TL/TODOLISTS/REMOVE_TODOLIST',
@@ -27,6 +28,7 @@ export const todolistsReducer = (
         {
           ...action.payload.todolist,
           filter: 'all',
+          entityStatus: 'idle',
         },
         ...state,
       ];
@@ -46,7 +48,11 @@ export const todolistsReducer = (
       );
 
     case ActionType.SET_TODOLISTS:
-      return action.payload.todolists.map((tl) => ({ ...tl, filter: 'all' }));
+      return action.payload.todolists.map((tl) => ({
+        ...tl,
+        filter: 'all',
+        entityStatus: 'idle',
+      }));
 
     default:
       return state;
@@ -100,10 +106,13 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) =>
 export const fetchTodolistsAsync = (): ThunkType<ActionsType> => async (
   dispatch,
 ) => {
+  dispatch(setStatusAC('loading'));
+
   const { status, data } = await todolistsAPI.getTodolists();
 
   if (status === 200) {
     dispatch(setTodolistsAC(data));
+    dispatch(setStatusAC('succeeded'));
   }
 };
 
@@ -122,12 +131,15 @@ export const removeTodolistAsync = (
 export const addTodolistAsync = (
   title: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
+  dispatch(setStatusAC('loading'));
+
   const {
     data: { resultCode, data },
   } = await todolistsAPI.createTodolist(title);
 
   if (resultCode === ResultCode.Success) {
     dispatch(addTodolistAC(data.item));
+    dispatch(setStatusAC('succeeded'));
   }
 };
 
@@ -150,9 +162,11 @@ type ActionsType =
   | ReturnType<typeof addTodolistAC>
   | ReturnType<typeof changeTodolistTitleAC>
   | ReturnType<typeof changeTodolistFilterAC>
-  | ReturnType<typeof setTodolistsAC>;
+  | ReturnType<typeof setTodolistsAC>
+  | ReturnType<typeof setStatusAC>;
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TodolistDomainType = TodolistType & {
   filter: FilterValuesType;
+  entityStatus: RequestStatusType;
 };

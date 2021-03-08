@@ -1,15 +1,9 @@
-/* eslint-disable import/no-cycle */
-import { ThunkType } from './store';
-/* eslint-enable import/no-cycle */
-
-import { todolistsAPI } from '../api/todolistsApi';
-
 export enum ActionType {
   SET_STATUS = 'TL/APP/SET_STATUS',
   SET_ERROR = 'TL/APP/SET_ERROR',
 }
 
-type StatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
+export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 const initialState: AppStateType = {
   status: 'idle',
@@ -33,7 +27,7 @@ export const appReducer = (
 };
 
 /** Actions */
-export const setStatusAC = (status: StatusType) =>
+export const setStatusAC = (status: RequestStatusType) =>
   ({
     type: ActionType.SET_STATUS,
     payload: {
@@ -51,7 +45,7 @@ export const setErrorAC = (error: null | string) =>
 
 /** Types */
 export type AppStateType = {
-  status: StatusType;
+  status: RequestStatusType;
   error: null | string;
 };
 

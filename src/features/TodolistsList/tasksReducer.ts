@@ -16,6 +16,7 @@ import {
   TaskType,
   UpdateTaskModelType,
 } from '../../api/todolistsApi';
+import { setErrorAC, setStatusAC } from '../../app/appReducer';
 
 export enum ActionType {
   REMOVE_TASK = 'TL/TASKS/REMOVE_TASK',
@@ -132,6 +133,8 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
 export const fetchTasksAsync = (
   todolistId: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
+  dispatch(setStatusAC('loading'));
+
   const {
     status,
     data: { items },
@@ -139,6 +142,7 @@ export const fetchTasksAsync = (
 
   if (status === 200) {
     dispatch(setTasksAC(items, todolistId));
+    dispatch(setStatusAC('succeeded'));
   }
 };
 
@@ -159,12 +163,23 @@ export const addTaskAsync = (
   title: string,
   todolistId: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
+  dispatch(setStatusAC('loading'));
+
   const {
-    data: { resultCode, data },
+    data: { resultCode, messages, data },
   } = await todolistsAPI.createTask(todolistId, title);
 
   if (resultCode === ResultCode.Success) {
     dispatch(addTaskAC(data.item));
+    dispatch(setStatusAC('succeeded'));
+  } else {
+    dispatch(setStatusAC('failed'));
+
+    if (messages.length) {
+      dispatch(setErrorAC(messages[0]));
+    } else {
+      dispatch(setErrorAC('Sorry, an unknown error occurred'));
+    }
   }
 };
 
@@ -207,7 +222,9 @@ type ActionsType =
   | ReturnType<typeof setTasksAC>
   | ReturnType<typeof addTodolistAC>
   | ReturnType<typeof removeTodolistAC>
-  | ReturnType<typeof setTodolistsAC>;
+  | ReturnType<typeof setTodolistsAC>
+  | ReturnType<typeof setErrorAC>
+  | ReturnType<typeof setStatusAC>;
 
 export type TasksStateType = Record<string, Array<TaskType>>;
 
