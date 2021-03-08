@@ -5,6 +5,7 @@ import {
   Container,
   IconButton,
   LinearProgress,
+  Theme,
   Toolbar,
   Typography,
 } from '@material-ui/core';
@@ -13,12 +14,23 @@ import { Menu } from '@material-ui/icons';
 
 import './App.css';
 import { TodolistsList } from '../features/TodolistsList/TodolistsList';
+import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
 
-const useStyles = makeStyles(() => ({
-  AppBar: {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    flexGrow: 1,
+    fontFamily: '"Roboto", sans-serif',
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  appBar: {
     position: 'relative',
   },
-  LinearProgress: {
+  linearProgress: {
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -29,19 +41,27 @@ const useStyles = makeStyles(() => ({
 export const App: FC = () => {
   const classes = useStyles();
   return (
-    <div className="App">
-      <AppBar position="static" className={classes.AppBar}>
+    <div className={classes.root}>
+      <AppBar position="static" className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
             <Menu />
           </IconButton>
-          <Typography variant="h6">News</Typography>
+          <Typography variant="h6" className={classes.title}>
+            News
+          </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>
-        <LinearProgress className={classes.LinearProgress} />
+        <LinearProgress className={classes.linearProgress} />
       </AppBar>
       <Container fixed>
         <TodolistsList />
+        <ErrorSnackbar />
       </Container>
     </div>
   );

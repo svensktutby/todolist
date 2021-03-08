@@ -30,24 +30,24 @@ type TodolistPropsType = {
 };
 
 const useStyles = makeStyles(() => ({
-  TodoListTitle: {
+  todoListTitle: {
     display: 'flex',
     alignItems: 'center',
   },
-  TodoListTitleIconButton: {
+  removeTodoListButton: {
     marginLeft: 'auto',
   },
-  TaskList: {
+  taskList: {
     paddingLeft: 0,
     listStyleType: 'none',
   },
-  ButtonGroupWrapper: {
+  buttonGroupWrapper: {
     textAlign: 'center',
   },
-  ButtonGroup: {
+  buttonGroup: {
     display: 'flex',
   },
-  Button: {
+  button: {
     flexGrow: 1,
   },
 }));
@@ -119,41 +119,41 @@ export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
 
   return (
     <div>
-      <Typography variant="h6" className={classes.TodoListTitle}>
+      <Typography variant="h6" className={classes.todoListTitle}>
         <EditableSpan value={props.title} onChange={changeTodoListTitle} />
         <IconButton
           onClick={removeTodoListHandler}
-          className={classes.TodoListTitleIconButton}
+          className={classes.removeTodoListButton}
         >
           <Delete />
         </IconButton>
       </Typography>
       <AddItemForm addItem={addTask} />
-      <ul className={classes.TaskList}>{tasks}</ul>
-      <div className={classes.ButtonGroupWrapper}>
+      <ul className={classes.taskList}>{tasks}</ul>
+      <div className={classes.buttonGroupWrapper}>
         <ButtonGroup
           size="small"
           color="primary"
-          className={classes.ButtonGroup}
+          className={classes.buttonGroup}
         >
           <Button
             variant={props.filter === 'all' ? 'contained' : 'outlined'}
             onClick={allClickHandler}
-            className={classes.Button}
+            className={classes.button}
           >
             All
           </Button>
           <Button
             variant={props.filter === 'active' ? 'contained' : 'outlined'}
             onClick={activeClickHandler}
-            className={classes.Button}
+            className={classes.button}
           >
             Active
           </Button>
           <Button
             variant={props.filter === 'completed' ? 'contained' : 'outlined'}
             onClick={completedClickHandler}
-            className={classes.Button}
+            className={classes.button}
           >
             Completed
           </Button>

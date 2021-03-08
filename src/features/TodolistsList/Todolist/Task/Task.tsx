@@ -19,11 +19,11 @@ export type TaskPropsType = {
 };
 
 const useStyles = makeStyles(() => ({
-  Task: {
+  root: {
     display: 'flex',
     alignItems: 'center',
   },
-  IconButton: {
+  removeTaskButton: {
     marginLeft: 'auto',
   },
 }));
@@ -55,7 +55,7 @@ export const Task: FC<TaskPropsType> = React.memo((props) => {
 
   return (
     <li
-      className={`${classes.Task} ${
+      className={`${classes.root} ${
         props.task.status === TaskStatus.Completed ? 'is-done' : ''
       }`}
     >
@@ -65,7 +65,10 @@ export const Task: FC<TaskPropsType> = React.memo((props) => {
         checked={props.task.status === TaskStatus.Completed}
       />
       <EditableSpan value={props.task.title} onChange={changeTaskTitle} />
-      <IconButton onClick={removeTaskHandler} className={classes.IconButton}>
+      <IconButton
+        onClick={removeTaskHandler}
+        className={classes.removeTaskButton}
+      >
         <Delete />
       </IconButton>
     </li>

@@ -11,6 +11,7 @@ import thunk, { ThunkAction, ThunkMiddleware } from 'redux-thunk';
 /* eslint-disable import/no-cycle */
 import { todolistsReducer } from '../features/TodolistsList/todolistsReducer';
 import { tasksReducer } from '../features/TodolistsList/tasksReducer';
+import { appReducer } from './appReducer';
 /* eslint-enable import/no-cycle */
 
 const DEV = process.env.NODE_ENV !== 'production';
@@ -18,6 +19,7 @@ const DEV = process.env.NODE_ENV !== 'production';
 const rootReducer = combineReducers({
   todolists: todolistsReducer,
   tasks: tasksReducer,
+  app: appReducer,
 });
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -24,10 +24,10 @@ import { AddItemForm } from '../../components/AddItemForm/AddItemForm';
 import { Todolist } from './Todolist/Todolist';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  GridContainer: {
+  addTodoListContainer: {
     padding: theme.spacing(2),
   },
-  Paper: {
+  paper: {
     padding: theme.spacing(2),
   },
 }));
@@ -104,7 +104,7 @@ export const TodolistsList: FC = () => {
 
   return (
     <>
-      <Grid container className={classes.GridContainer}>
+      <Grid container className={classes.addTodoListContainer}>
         <AddItemForm addItem={addTodoList} />
       </Grid>
 
@@ -114,7 +114,7 @@ export const TodolistsList: FC = () => {
 
           return (
             <Grid item key={tl.id}>
-              <Paper className={classes.Paper}>
+              <Paper className={classes.paper}>
                 <Todolist
                   id={tl.id}
                   title={tl.title}

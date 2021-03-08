@@ -99,6 +99,10 @@ const initialGlobalState: AppRootStateType = {
       },
     ],
   },
+  app: {
+    status: 'idle',
+    error: null,
+  },
 };
 
 export const storyBookStore = createStore(rootReducer, initialGlobalState);
