@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react/types-6-0';
 
-import { App } from './App';
+import { App, AppPropsType } from './App';
 import { ReduxStoreProviderDecorator } from '../stories/ReduxStoreProviderDecorator';
 
 export default {
@@ -10,7 +10,9 @@ export default {
   decorators: [ReduxStoreProviderDecorator],
 } as Meta;
 
-const Template: Story = () => <App />;
+const Template: Story<AppPropsType> = (args) => <App {...args} />;
 
 export const AppExample = Template.bind({});
-AppExample.args = {};
+AppExample.args = {
+  demo: true,
+};

@@ -6,6 +6,16 @@ import { Delete } from '@material-ui/icons';
 import { EditableSpan } from '../../../../components/EditableSpan/EditableSpan';
 import { TaskStatus, TaskType } from '../../../../api/todolistsApi';
 
+const useStyles = makeStyles(() => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  removeTaskButton: {
+    marginLeft: 'auto',
+  },
+}));
+
 export type TaskPropsType = {
   task: TaskType;
   todolistId: string;
@@ -17,16 +27,6 @@ export type TaskPropsType = {
   ) => void;
   changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
 };
-
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  removeTaskButton: {
-    marginLeft: 'auto',
-  },
-}));
 
 export const Task: FC<TaskPropsType> = React.memo((props) => {
   const classes = useStyles();

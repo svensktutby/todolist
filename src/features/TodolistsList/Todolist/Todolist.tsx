@@ -8,26 +8,8 @@ import { AddItemForm } from '../../../components/AddItemForm/AddItemForm';
 import { EditableSpan } from '../../../components/EditableSpan/EditableSpan';
 import { Task } from './Task/Task';
 import { TaskStatus, TaskType } from '../../../api/todolistsApi';
-import { FilterValuesType } from '../todolistsReducer';
+import { FilterValuesType, TodolistDomainType } from '../todolistsReducer';
 import { fetchTasksAsync } from '../tasksReducer';
-
-type TodolistPropsType = {
-  id: string;
-  title: string;
-  tasks: Array<TaskType>;
-  filter: FilterValuesType;
-  removeTodoList: (todolistId: string) => void;
-  addTask: (title: string, todolistId: string) => void;
-  removeTask: (taskId: string, todolistId: string) => void;
-  changeFilter: (filterValue: FilterValuesType, todolistId: string) => void;
-  changeStatus: (
-    taskId: string,
-    status: TaskStatus,
-    todolistId: string,
-  ) => void;
-  changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
-  changeTodoListTitle: (todolistId: string, title: string) => void;
-};
 
 const useStyles = makeStyles(() => ({
   todoListTitle: {
@@ -52,113 +34,145 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const Todolist: FC<TodolistPropsType> = React.memo((props) => {
-  const classes = useStyles();
+type TodolistPropsType = {
+  todolist: TodolistDomainType;
+  tasks: Array<TaskType>;
+  demo?: boolean;
+  removeTodoList: (todolistId: string) => void;
+  addTask: (title: string, todolistId: string) => void;
+  removeTask: (taskId: string, todolistId: string) => void;
+  changeFilter: (filterValue: FilterValuesType, todolistId: string) => void;
+  changeStatus: (
+    taskId: string,
+    status: TaskStatus,
+    todolistId: string,
+  ) => void;
+  changeTaskTitle: (taskId: string, title: string, todolistId: string) => void;
+  changeTodoListTitle: (todolistId: string, title: string) => void;
+};
 
-  const dispatch = useDispatch();
+export const Todolist: FC<TodolistPropsType> = React.memo(
+  ({ demo = false, ...props }) => {
+    const classes = useStyles();
 
-  useEffect(() => {
-    dispatch(fetchTasksAsync(props.id));
-  }, [dispatch, props.id]);
+    const dispatch = useDispatch();
 
-  const addTask = useCallback(
-    (title: string) => {
-      props.addTask(title, props.id);
-    },
-    [props],
-  );
-  const removeTodoListHandler = useCallback(
-    () => props.removeTodoList(props.id),
-    [props],
-  );
+    useEffect(() => {
+      if (!demo) dispatch(fetchTasksAsync(props.todolist.id));
+    }, [dispatch, demo, props.todolist.id]);
 
-  const changeTodoListTitle = useCallback(
-    (title: string) => {
-      props.changeTodoListTitle(props.id, title);
-    },
-    [props],
-  );
-
-  const allClickHandler = useCallback(
-    () => props.changeFilter('all', props.id),
-    [props],
-  );
-  const activeClickHandler = useCallback(
-    () => props.changeFilter('active', props.id),
-    [props],
-  );
-  const completedClickHandler = useCallback(
-    () => props.changeFilter('completed', props.id),
-    [props],
-  );
-
-  let tasksForTodolist = props.tasks;
-
-  if (props.filter === 'active') {
-    tasksForTodolist = props.tasks.filter((t) => t.status === TaskStatus.New);
-  }
-
-  if (props.filter === 'completed') {
-    tasksForTodolist = props.tasks.filter(
-      (t) => t.status === TaskStatus.Completed,
+    const addTask = useCallback(
+      (title: string) => {
+        props.addTask(title, props.todolist.id);
+      },
+      [props],
     );
-  }
+    const removeTodoListHandler = useCallback(
+      () => props.removeTodoList(props.todolist.id),
+      [props],
+    );
 
-  const tasks = tasksForTodolist.map((t) => {
+    const changeTodoListTitle = useCallback(
+      (title: string) => {
+        props.changeTodoListTitle(props.todolist.id, title);
+      },
+      [props],
+    );
+
+    const allClickHandler = useCallback(
+      () => props.changeFilter('all', props.todolist.id),
+      [props],
+    );
+    const activeClickHandler = useCallback(
+      () => props.changeFilter('active', props.todolist.id),
+      [props],
+    );
+    const completedClickHandler = useCallback(
+      () => props.changeFilter('completed', props.todolist.id),
+      [props],
+    );
+
+    let tasksForTodolist = props.tasks;
+
+    if (props.todolist.filter === 'active') {
+      tasksForTodolist = props.tasks.filter((t) => t.status === TaskStatus.New);
+    }
+
+    if (props.todolist.filter === 'completed') {
+      tasksForTodolist = props.tasks.filter(
+        (t) => t.status === TaskStatus.Completed,
+      );
+    }
+
+    const tasks = tasksForTodolist.map((t) => {
+      return (
+        <Task
+          key={t.id}
+          task={t}
+          todolistId={props.todolist.id}
+          removeTask={props.removeTask}
+          changeTaskTitle={props.changeTaskTitle}
+          changeStatus={props.changeStatus}
+        />
+      );
+    });
+
     return (
-      <Task
-        key={t.id}
-        task={t}
-        todolistId={props.id}
-        removeTask={props.removeTask}
-        changeTaskTitle={props.changeTaskTitle}
-        changeStatus={props.changeStatus}
-      />
-    );
-  });
-
-  return (
-    <div>
-      <Typography variant="h6" className={classes.todoListTitle}>
-        <EditableSpan value={props.title} onChange={changeTodoListTitle} />
-        <IconButton
-          onClick={removeTodoListHandler}
-          className={classes.removeTodoListButton}
-        >
-          <Delete />
-        </IconButton>
-      </Typography>
-      <AddItemForm addItem={addTask} />
-      <ul className={classes.taskList}>{tasks}</ul>
-      <div className={classes.buttonGroupWrapper}>
-        <ButtonGroup
-          size="small"
-          color="primary"
-          className={classes.buttonGroup}
-        >
-          <Button
-            variant={props.filter === 'all' ? 'contained' : 'outlined'}
-            onClick={allClickHandler}
-            className={classes.button}
+      <div>
+        <Typography variant="h6" className={classes.todoListTitle}>
+          <EditableSpan
+            value={props.todolist.title}
+            onChange={changeTodoListTitle}
+          />
+          <IconButton
+            onClick={removeTodoListHandler}
+            className={classes.removeTodoListButton}
+            disabled={props.todolist.entityStatus === 'loading'}
           >
-            All
-          </Button>
-          <Button
-            variant={props.filter === 'active' ? 'contained' : 'outlined'}
-            onClick={activeClickHandler}
-            className={classes.button}
+            <Delete />
+          </IconButton>
+        </Typography>
+        <AddItemForm
+          addItem={addTask}
+          disabled={props.todolist.entityStatus === 'loading'}
+        />
+        <ul className={classes.taskList}>{tasks}</ul>
+        <div className={classes.buttonGroupWrapper}>
+          <ButtonGroup
+            size="small"
+            color="primary"
+            className={classes.buttonGroup}
           >
-            Active
-          </Button>
-          <Button
-            variant={props.filter === 'completed' ? 'contained' : 'outlined'}
-            onClick={completedClickHandler}
-            className={classes.button}
-          >
-            Completed
-          </Button>
-        </ButtonGroup>
+            <Button
+              variant={
+                props.todolist.filter === 'all' ? 'contained' : 'outlined'
+              }
+              onClick={allClickHandler}
+              className={classes.button}
+            >
+              All
+            </Button>
+            <Button
+              variant={
+                props.todolist.filter === 'active' ? 'contained' : 'outlined'
+              }
+              onClick={activeClickHandler}
+              className={classes.button}
+            >
+              Active
+            </Button>
+            <Button
+              variant={
+                props.todolist.filter === 'completed' ? 'contained' : 'outlined'
+              }
+              onClick={completedClickHandler}
+              className={classes.button}
+            >
+              Completed
+            </Button>
+          </ButtonGroup>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);

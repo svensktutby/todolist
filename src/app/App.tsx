@@ -39,7 +39,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const App: FC = () => {
+export type AppPropsType = {
+  demo?: boolean;
+};
+
+export const App: FC<AppPropsType> = ({ demo = false }) => {
   const classes = useStyles();
 
   const status = useTypedSelector<RequestStatusType>(
@@ -69,7 +73,7 @@ export const App: FC = () => {
         )}
       </AppBar>
       <Container fixed>
-        <TodolistsList />
+        <TodolistsList demo={demo} />
         <ErrorSnackbar />
       </Container>
     </div>

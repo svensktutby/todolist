@@ -1,6 +1,6 @@
 import {
-  setStatusAC,
-  setErrorAC,
+  setAppStatusAC,
+  setAppErrorAC,
   AppStateType,
   appReducer,
 } from './appReducer';
@@ -16,13 +16,13 @@ describe('app reducer', () => {
   });
 
   it('should handle setStatusAC', () => {
-    const endState = appReducer(startState, setStatusAC('succeeded'));
+    const endState = appReducer(startState, setAppStatusAC('succeeded'));
 
     expect(endState.status).toBe('succeeded');
   });
 
   it('should handle setErrorAC', () => {
-    const endState = appReducer(startState, setErrorAC('some error'));
+    const endState = appReducer(startState, setAppErrorAC('some error'));
 
     expect(endState.error).toBe('some error');
   });

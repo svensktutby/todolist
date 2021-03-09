@@ -16,7 +16,7 @@ import {
   TaskType,
   UpdateTaskModelType,
 } from '../../api/todolistsApi';
-import { setErrorAC, setStatusAC } from '../../app/appReducer';
+import { setAppErrorAC, setAppStatusAC } from '../../app/appReducer';
 
 export enum ActionType {
   REMOVE_TASK = 'TL/TASKS/REMOVE_TASK',
@@ -133,7 +133,7 @@ export const setTasksAC = (tasks: Array<TaskType>, todolistId: string) =>
 export const fetchTasksAsync = (
   todolistId: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
-  dispatch(setStatusAC('loading'));
+  dispatch(setAppStatusAC('loading'));
 
   const {
     status,
@@ -142,7 +142,7 @@ export const fetchTasksAsync = (
 
   if (status === 200) {
     dispatch(setTasksAC(items, todolistId));
-    dispatch(setStatusAC('succeeded'));
+    dispatch(setAppStatusAC('succeeded'));
   }
 };
 
@@ -163,7 +163,7 @@ export const addTaskAsync = (
   title: string,
   todolistId: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
-  dispatch(setStatusAC('loading'));
+  dispatch(setAppStatusAC('loading'));
 
   const {
     data: { resultCode, messages, data },
@@ -171,14 +171,14 @@ export const addTaskAsync = (
 
   if (resultCode === ResultCode.Success) {
     dispatch(addTaskAC(data.item));
-    dispatch(setStatusAC('succeeded'));
+    dispatch(setAppStatusAC('succeeded'));
   } else {
-    dispatch(setStatusAC('failed'));
+    dispatch(setAppStatusAC('failed'));
 
     if (messages.length) {
-      dispatch(setErrorAC(messages[0]));
+      dispatch(setAppErrorAC(messages[0]));
     } else {
-      dispatch(setErrorAC('Sorry, an unknown error occurred'));
+      dispatch(setAppErrorAC('Sorry, an unknown error occurred'));
     }
   }
 };
@@ -223,8 +223,8 @@ type ActionsType =
   | ReturnType<typeof addTodolistAC>
   | ReturnType<typeof removeTodolistAC>
   | ReturnType<typeof setTodolistsAC>
-  | ReturnType<typeof setErrorAC>
-  | ReturnType<typeof setStatusAC>;
+  | ReturnType<typeof setAppErrorAC>
+  | ReturnType<typeof setAppStatusAC>;
 
 export type TasksStateType = Record<string, Array<TaskType>>;
 

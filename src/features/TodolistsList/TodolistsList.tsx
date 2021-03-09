@@ -32,7 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const TodolistsList: FC = () => {
+type TodolistsListPropsType = {
+  demo?: boolean;
+};
+
+export const TodolistsList: FC<TodolistsListPropsType> = ({ demo = false }) => {
   const classes = useStyles();
 
   const todolists = useTypedSelector<Array<TodolistDomainType>>(
@@ -43,8 +47,8 @@ export const TodolistsList: FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchTodolistsAsync());
-  }, [dispatch]);
+    if (!demo) dispatch(fetchTodolistsAsync());
+  }, [dispatch, demo]);
 
   const removeTask = useCallback(
     (taskId: string, todolistId: string) => {
@@ -116,9 +120,8 @@ export const TodolistsList: FC = () => {
             <Grid item key={tl.id}>
               <Paper className={classes.paper}>
                 <Todolist
-                  id={tl.id}
-                  title={tl.title}
-                  filter={tl.filter}
+                  todolist={tl}
+                  demo={demo}
                   tasks={tasksForTodolist}
                   removeTask={removeTask}
                   changeFilter={changeFilter}

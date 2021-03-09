@@ -2,17 +2,17 @@ import React, { ChangeEvent, FC, useState } from 'react';
 import { TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-export type EditableSpanPropsType = {
-  value: string;
-  onChange: (title: string) => void;
-};
-
 const useStyles = makeStyles(() => ({
   text: {
     wordBreak: 'break-word',
     fontSize: '1rem',
   },
 }));
+
+export type EditableSpanPropsType = {
+  value: string;
+  onChange: (title: string) => void;
+};
 
 export const EditableSpan: FC<EditableSpanPropsType> = React.memo((props) => {
   const classes = useStyles();

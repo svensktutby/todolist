@@ -3,13 +3,14 @@ import { ThunkType } from '../../app/store';
 /* eslint-enable import/no-cycle */
 
 import { ResultCode, todolistsAPI, TodolistType } from '../../api/todolistsApi';
-import { RequestStatusType, setStatusAC } from '../../app/appReducer';
+import { RequestStatusType, setAppStatusAC } from '../../app/appReducer';
 
 export enum ActionType {
   REMOVE_TODOLIST = 'TL/TODOLISTS/REMOVE_TODOLIST',
   ADD_TODOLIST = 'TL/TODOLISTS/ADD_TODOLIST',
   CHANGE_TODOLIST_TITLE = 'TL/TODOLISTS/CHANGE_TODOLIST_TITLE',
   CHANGE_TODOLIST_FILTER = 'TL/TODOLISTS/CHANGE_TODOLIST_FILTER',
+  CHANGE_TODOLIST_ENTITY_STATUS = 'TL/TODOLISTS/CHANGE_TODOLIST_ENTITY_STATUS',
   SET_TODOLISTS = 'TL/TODOLISTS/SET_TODOLISTS',
 }
 
@@ -44,6 +45,13 @@ export const todolistsReducer = (
       return state.map((tl) =>
         tl.id === action.payload.id
           ? { ...tl, filter: action.payload.filter }
+          : tl,
+      );
+
+    case ActionType.CHANGE_TODOLIST_ENTITY_STATUS:
+      return state.map((tl) =>
+        tl.id === action.payload.id
+          ? { ...tl, entityStatus: action.payload.status }
           : tl,
       );
 
@@ -89,8 +97,20 @@ export const changeTodolistFilterAC = (filter: FilterValuesType, id: string) =>
   ({
     type: ActionType.CHANGE_TODOLIST_FILTER,
     payload: {
-      filter,
       id,
+      filter,
+    },
+  } as const);
+
+export const changeTodolistEntityStatusAC = (
+  id: string,
+  status: RequestStatusType,
+) =>
+  ({
+    type: ActionType.CHANGE_TODOLIST_ENTITY_STATUS,
+    payload: {
+      id,
+      status,
     },
   } as const);
 
@@ -106,32 +126,36 @@ export const setTodolistsAC = (todolists: Array<TodolistType>) =>
 export const fetchTodolistsAsync = (): ThunkType<ActionsType> => async (
   dispatch,
 ) => {
-  dispatch(setStatusAC('loading'));
+  dispatch(setAppStatusAC('loading'));
 
   const { status, data } = await todolistsAPI.getTodolists();
 
   if (status === 200) {
     dispatch(setTodolistsAC(data));
-    dispatch(setStatusAC('succeeded'));
+    dispatch(setAppStatusAC('succeeded'));
   }
 };
 
 export const removeTodolistAsync = (
   todolistId: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
+  dispatch(setAppStatusAC('loading'));
+  dispatch(changeTodolistEntityStatusAC(todolistId, 'loading'));
+
   const {
     data: { resultCode },
   } = await todolistsAPI.deleteTodolist(todolistId);
 
   if (resultCode === ResultCode.Success) {
     dispatch(removeTodolistAC(todolistId));
+    dispatch(setAppStatusAC('succeeded'));
   }
 };
 
 export const addTodolistAsync = (
   title: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
-  dispatch(setStatusAC('loading'));
+  dispatch(setAppStatusAC('loading'));
 
   const {
     data: { resultCode, data },
@@ -139,7 +163,7 @@ export const addTodolistAsync = (
 
   if (resultCode === ResultCode.Success) {
     dispatch(addTodolistAC(data.item));
-    dispatch(setStatusAC('succeeded'));
+    dispatch(setAppStatusAC('succeeded'));
   }
 };
 
@@ -163,7 +187,8 @@ type ActionsType =
   | ReturnType<typeof changeTodolistTitleAC>
   | ReturnType<typeof changeTodolistFilterAC>
   | ReturnType<typeof setTodolistsAC>
-  | ReturnType<typeof setStatusAC>;
+  | ReturnType<typeof changeTodolistEntityStatusAC>
+  | ReturnType<typeof setAppStatusAC>;
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 export type TodolistDomainType = TodolistType & {
