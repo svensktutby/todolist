@@ -120,7 +120,7 @@ type TasksResponseType = {
   error: string | null;
 };
 
-type ResponseType<D = Record<string, unknown>> = {
+export type ResponseType<D = Record<string, unknown>> = {
   resultCode: ResultCode;
   messages: Array<string>;
   data: D;

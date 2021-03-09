@@ -17,6 +17,10 @@ import {
   UpdateTaskModelType,
 } from '../../api/todolistsApi';
 import { setAppErrorAC, setAppStatusAC } from '../../app/appReducer';
+import {
+  handleServerAppError,
+  handleServerNetworkError,
+} from '../../utils/errorUtils';
 
 export enum ActionType {
   REMOVE_TASK = 'TL/TASKS/REMOVE_TASK',
@@ -135,14 +139,18 @@ export const fetchTasksAsync = (
 ): ThunkType<ActionsType> => async (dispatch) => {
   dispatch(setAppStatusAC('loading'));
 
-  const {
-    status,
-    data: { items },
-  } = await todolistsAPI.getTasks(todolistId);
+  try {
+    const {
+      status,
+      data: { items },
+    } = await todolistsAPI.getTasks(todolistId);
 
-  if (status === 200) {
-    dispatch(setTasksAC(items, todolistId));
-    dispatch(setAppStatusAC('succeeded'));
+    if (status === 200) {
+      dispatch(setTasksAC(items, todolistId));
+      dispatch(setAppStatusAC('succeeded'));
+    }
+  } catch (error) {
+    handleServerNetworkError(error, dispatch);
   }
 };
 
@@ -150,12 +158,19 @@ export const removeTaskAsync = (
   taskId: string,
   todolistId: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
-  const {
-    data: { resultCode },
-  } = await todolistsAPI.deleteTask(todolistId, taskId);
+  try {
+    const {
+      data: { resultCode, messages },
+    } = await todolistsAPI.deleteTask(todolistId, taskId);
 
-  if (resultCode === ResultCode.Success) {
-    dispatch(removeTaskAC(taskId, todolistId));
+    if (resultCode === ResultCode.Success) {
+      dispatch(removeTaskAC(taskId, todolistId));
+      dispatch(setAppStatusAC('succeeded'));
+    } else {
+      handleServerAppError(messages, dispatch);
+    }
+  } catch (error) {
+    handleServerNetworkError(error, dispatch);
   }
 };
 
@@ -165,21 +180,19 @@ export const addTaskAsync = (
 ): ThunkType<ActionsType> => async (dispatch) => {
   dispatch(setAppStatusAC('loading'));
 
-  const {
-    data: { resultCode, messages, data },
-  } = await todolistsAPI.createTask(todolistId, title);
+  try {
+    const {
+      data: { resultCode, messages, data },
+    } = await todolistsAPI.createTask(todolistId, title);
 
-  if (resultCode === ResultCode.Success) {
-    dispatch(addTaskAC(data.item));
-    dispatch(setAppStatusAC('succeeded'));
-  } else {
-    dispatch(setAppStatusAC('failed'));
-
-    if (messages.length) {
-      dispatch(setAppErrorAC(messages[0]));
+    if (resultCode === ResultCode.Success) {
+      dispatch(addTaskAC(data.item));
+      dispatch(setAppStatusAC('succeeded'));
     } else {
-      dispatch(setAppErrorAC('Sorry, an unknown error occurred'));
+      handleServerAppError(messages, dispatch);
     }
+  } catch (error) {
+    handleServerNetworkError(error, dispatch);
   }
 };
 
@@ -204,12 +217,18 @@ export const updateTaskAsync = (
       ...domainModel,
     };
 
-    const {
-      data: { resultCode },
-    } = await todolistsAPI.updateTask(todolistId, taskId, model);
+    try {
+      const {
+        data: { resultCode, messages },
+      } = await todolistsAPI.updateTask(todolistId, taskId, model);
 
-    if (resultCode === ResultCode.Success) {
-      dispatch(updateTaskAC(taskId, domainModel, todolistId));
+      if (resultCode === ResultCode.Success) {
+        dispatch(updateTaskAC(taskId, domainModel, todolistId));
+      } else {
+        handleServerAppError(messages, dispatch);
+      }
+    } catch (error) {
+      handleServerNetworkError(error, dispatch);
     }
   }
 };
