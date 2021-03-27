@@ -1,5 +1,11 @@
 import React, { FC } from 'react';
 import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
+import {
   AppBar,
   Button,
   Container,
@@ -16,6 +22,7 @@ import { useTypedSelector } from '../hooks/useTypedSelector';
 import { TodolistsList } from '../features/TodolistsList/TodolistsList';
 import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
 import { RequestStatusType } from './appReducer';
+import { Login } from '../features/Login/Login';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -51,31 +58,43 @@ export const App: FC<AppPropsType> = ({ demo = false }) => {
   );
 
   return (
-    <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <Menu />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            News
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
+    <Router>
+      <div className={classes.root}>
+        <AppBar position="static" className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
+              <Menu />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              News
+            </Typography>
+            <Button color="inherit">Login</Button>
+          </Toolbar>
 
-        {status === 'loading' && (
-          <LinearProgress className={classes.linearProgress} />
-        )}
-      </AppBar>
-      <Container fixed>
-        <TodolistsList demo={demo} />
+          {status === 'loading' && (
+            <LinearProgress className={classes.linearProgress} />
+          )}
+        </AppBar>
+        <Container fixed>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => <TodolistsList demo={demo} />}
+            />
+            <Route path="/login" render={() => <Login />} />
+
+            <Route path="/404" render={() => <h1>404: PAGE NOT FOUND</h1>} />
+            <Redirect from="*" to="/404" />
+          </Switch>
+        </Container>
         <ErrorSnackbar />
-      </Container>
-    </div>
+      </div>
+    </Router>
   );
 };
