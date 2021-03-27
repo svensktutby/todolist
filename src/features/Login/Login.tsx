@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { FormikValues, useFormik } from 'formik';
+import { FormikHelpers, useFormik } from 'formik';
+import * as yup from 'yup';
 import {
   Checkbox,
   FormControl,
@@ -10,7 +11,6 @@ import {
   Button,
   Grid,
   Link,
-  Typography,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
@@ -20,42 +20,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const validate = (values: FormikValues) => {
-  const errors: FormikErrorType = {};
-  const { email, password } = values;
-
-  if (!email) {
-    errors.email = 'Required';
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-    errors.email = 'Invalid email address';
-  }
-
-  if (!password) {
-    errors.password = 'Required';
-  } else if (password.length <= 2) {
-    errors.password = 'Password must be more than 2 characters';
-  }
-
-  return errors;
+const initialValues: InitialValuesType = {
+  email: '',
+  password: '',
+  rememberMe: false,
 };
+
+const onSubmit = (
+  values: InitialValuesType,
+  formikHelpers: FormikHelpers<InitialValuesType>,
+): void => {
+  alert(JSON.stringify(values, null, 2));
+  formikHelpers.resetForm();
+};
+
+const validationSchema = yup.object({
+  email: yup
+    .string()
+    .email('Enter a valid email')
+    .required('Email is required'),
+  password: yup
+    .string()
+    .min(3, 'Password should be of minimum 3 characters length')
+    .required('Password is required'),
+});
 
 export const Login: FC = () => {
   const classes = useStyles();
 
   const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-      rememberMe: false,
-    } as InitialValuesType,
-    validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values));
-      formik.resetForm();
-    },
+    initialValues,
+    validationSchema,
+    onSubmit,
   });
-
-  console.log(formik.values);
 
   return (
     <Grid container justify="center">
@@ -82,23 +79,19 @@ export const Login: FC = () => {
                 label="Email"
                 margin="normal"
                 {...formik.getFieldProps('email')}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
               />
-              {formik.touched.email && formik.errors.email && (
-                <Typography variant="body2" color="error">
-                  {formik.errors.email}
-                </Typography>
-              )}
               <TextField
                 type="password"
                 label="Password"
                 margin="normal"
                 {...formik.getFieldProps('password')}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
               />
-              {formik.touched.password && formik.errors.password && (
-                <Typography variant="body2" color="error">
-                  {formik.errors.password}
-                </Typography>
-              )}
               <FormControlLabel
                 className={classes.checkboxLabel}
                 label="Remember me"
@@ -120,10 +113,4 @@ type InitialValuesType = {
   email: string;
   password: string;
   rememberMe: boolean;
-};
-
-type FormikErrorType = {
-  email?: string;
-  password?: string;
-  rememberMe?: boolean;
 };
