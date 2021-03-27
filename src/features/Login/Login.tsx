@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useFormik } from 'formik';
+import { FormikValues, useFormik } from 'formik';
 import {
   Checkbox,
   FormControl,
@@ -10,6 +10,7 @@ import {
   Button,
   Grid,
   Link,
+  Typography,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
@@ -18,6 +19,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
 }));
+
+const validate = (values: FormikValues) => {
+  const errors: FormikErrorType = {};
+  const { email, password } = values;
+
+  if (!email) {
+    errors.email = 'Required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+    errors.email = 'Invalid email address';
+  }
+
+  if (!password) {
+    errors.password = 'Required';
+  } else if (password.length <= 2) {
+    errors.password = 'Password must be more than 2 characters';
+  }
+
+  return errors;
+};
 
 export const Login: FC = () => {
   const classes = useStyles();
@@ -28,10 +48,14 @@ export const Login: FC = () => {
       password: '',
       rememberMe: false,
     } as InitialValuesType,
+    validate,
     onSubmit: (values) => {
       alert(JSON.stringify(values));
+      formik.resetForm();
     },
   });
+
+  console.log(formik.values);
 
   return (
     <Grid container justify="center">
@@ -59,12 +83,22 @@ export const Login: FC = () => {
                 margin="normal"
                 {...formik.getFieldProps('email')}
               />
+              {formik.touched.email && formik.errors.email && (
+                <Typography variant="body2" color="error">
+                  {formik.errors.email}
+                </Typography>
+              )}
               <TextField
                 type="password"
                 label="Password"
                 margin="normal"
                 {...formik.getFieldProps('password')}
               />
+              {formik.touched.password && formik.errors.password && (
+                <Typography variant="body2" color="error">
+                  {formik.errors.password}
+                </Typography>
+              )}
               <FormControlLabel
                 className={classes.checkboxLabel}
                 label="Remember me"
@@ -86,4 +120,10 @@ type InitialValuesType = {
   email: string;
   password: string;
   rememberMe: boolean;
+};
+
+type FormikErrorType = {
+  email?: string;
+  password?: string;
+  rememberMe?: boolean;
 };
