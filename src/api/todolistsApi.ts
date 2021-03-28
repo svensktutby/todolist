@@ -71,6 +71,9 @@ export const authAPI = {
   ): Promise<AxiosResponse<ResponseType<LoginResponseType>>> {
     return API.post<ResponseType<LoginResponseType>>('auth/login', data);
   },
+  logout(): Promise<AxiosResponse<ResponseType>> {
+    return API.delete<ResponseType>('auth/login');
+  },
 };
 
 /** Types */

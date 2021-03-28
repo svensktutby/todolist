@@ -64,6 +64,25 @@ export const loginAsync = (
   }
 };
 
+export const logoutAsync = (): ThunkType<ActionsType> => async (dispatch) => {
+  dispatch(setAppStatusAC('loading'));
+
+  try {
+    const {
+      data: { resultCode, messages },
+    } = await authAPI.logout();
+
+    if (resultCode === ResultCode.Success) {
+      dispatch(setIsLoggedInAC(false));
+      dispatch(setAppStatusAC('succeeded'));
+    } else {
+      handleServerAppError(messages, dispatch);
+    }
+  } catch (error) {
+    handleServerNetworkError(error, dispatch);
+  }
+};
+
 /** Types */
 type ActionsType =
   | ReturnType<typeof setIsLoggedInAC>

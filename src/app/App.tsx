@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   BrowserRouter as Router,
@@ -25,6 +25,7 @@ import { TodolistsList } from '../features/TodolistsList/TodolistsList';
 import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
 import { initializeAppAsync, RequestStatusType } from './appReducer';
 import { Login } from '../features/Login/Login';
+import { logoutAsync } from '../features/Login/authReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -75,6 +76,14 @@ export const App: FC<AppPropsType> = ({ demo = false }) => {
     (state) => state.app.isInitialized,
   );
 
+  const isLoggedIn = useTypedSelector<boolean>(
+    (state) => state.auth.isLoggedIn,
+  );
+
+  const logoutHandler = useCallback(() => {
+    dispatch(logoutAsync());
+  }, [dispatch]);
+
   if (!isInitialized) {
     return (
       <div className={classes.circularProgressWrapper}>
@@ -100,7 +109,11 @@ export const App: FC<AppPropsType> = ({ demo = false }) => {
               Todolist
             </Typography>
 
-            <Button color="inherit">Login</Button>
+            {isLoggedIn && (
+              <Button color="inherit" onClick={logoutHandler}>
+                Log out
+              </Button>
+            )}
           </Toolbar>
 
           {status === 'loading' && (
