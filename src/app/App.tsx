@@ -26,6 +26,7 @@ import { ErrorSnackbar } from '../components/ErrorSnackbar/ErrorSnackbar';
 import { initializeAppAsync, RequestStatusType } from './appReducer';
 import { Login } from '../features/Login/Login';
 import { logoutAsync } from '../features/Login/authReducer';
+import { Error404 } from '../features/Error404/Error404';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -129,7 +130,7 @@ export const App: FC<AppPropsType> = ({ demo = false }) => {
             />
             <Route path="/login" render={() => <Login />} />
 
-            <Route path="/404" render={() => <h1>404: PAGE NOT FOUND</h1>} />
+            <Route path="/404" render={() => <Error404 />} />
             <Redirect from="*" to="/404" />
           </Switch>
         </Container>
