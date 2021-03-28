@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import { useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { FormikHelpers, useFormik } from 'formik';
 import * as yup from 'yup';
 import {
@@ -13,6 +15,9 @@ import {
   Link,
 } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { LoginValuesType } from '../../api/todolistsApi';
+import { loginAsync } from './authReducer';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkboxLabel: {
@@ -20,18 +25,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const initialValues: InitialValuesType = {
+const initialValues: LoginValuesType = {
   email: '',
   password: '',
   rememberMe: false,
-};
-
-const onSubmit = (
-  values: InitialValuesType,
-  formikHelpers: FormikHelpers<InitialValuesType>,
-): void => {
-  alert(JSON.stringify(values, null, 2));
-  formikHelpers.resetForm();
 };
 
 const validationSchema = yup.object({
@@ -48,11 +45,29 @@ const validationSchema = yup.object({
 export const Login: FC = () => {
   const classes = useStyles();
 
+  const dispatch = useDispatch();
+
+  const isLoggedIn = useTypedSelector<boolean>(
+    (state) => state.auth.isLoggedIn,
+  );
+
+  const onSubmit = (
+    values: LoginValuesType,
+    formikHelpers: FormikHelpers<LoginValuesType>,
+  ): void => {
+    dispatch(loginAsync(values));
+    formikHelpers.resetForm();
+  };
+
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit,
   });
+
+  if (isLoggedIn) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <Grid container justify="center">
@@ -107,10 +122,4 @@ export const Login: FC = () => {
       </Grid>
     </Grid>
   );
-};
-
-type InitialValuesType = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
 };

@@ -71,7 +71,7 @@ export const App: FC<AppPropsType> = ({ demo = false }) => {
               <Menu />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              News
+              Todolist
             </Typography>
             <Button color="inherit">Login</Button>
           </Toolbar>

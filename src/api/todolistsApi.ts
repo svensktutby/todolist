@@ -62,6 +62,17 @@ export const todolistsAPI = {
   },
 };
 
+export const authAPI = {
+  login(
+    data: LoginValuesType,
+  ): Promise<AxiosResponse<ResponseType<ResponseType<{ userId?: number }>>>> {
+    return API.post<ResponseType<ResponseType<{ userId?: number }>>>(
+      'auth/login',
+      data,
+    );
+  },
+};
+
 /** Types */
 export enum ResultCode {
   Success = 0,
@@ -104,6 +115,13 @@ export type TaskType = UpdateTaskModelType & {
   todoListId: string;
   order: number;
   addedDate: string;
+};
+
+export type LoginValuesType = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+  captcha?: string;
 };
 
 type TodolistResponseDataType = {
