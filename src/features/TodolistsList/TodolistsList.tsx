@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Grid, Paper } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
@@ -44,11 +45,15 @@ export const TodolistsList: FC<TodolistsListPropsType> = ({ demo = false }) => {
   );
   const tasks = useTypedSelector<TasksStateType>((state) => state.tasks);
 
+  const isLoggedIn = useTypedSelector<boolean>(
+    (state) => state.auth.isLoggedIn,
+  );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!demo) dispatch(fetchTodolistsAsync());
-  }, [dispatch, demo]);
+    if (!demo && isLoggedIn) dispatch(fetchTodolistsAsync());
+  }, [dispatch, demo, isLoggedIn]);
 
   const removeTask = useCallback(
     (taskId: string, todolistId: string) => {
@@ -105,6 +110,10 @@ export const TodolistsList: FC<TodolistsListPropsType> = ({ demo = false }) => {
     },
     [dispatch],
   );
+
+  if (!isLoggedIn) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <>

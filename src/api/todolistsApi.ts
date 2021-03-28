@@ -63,13 +63,13 @@ export const todolistsAPI = {
 };
 
 export const authAPI = {
+  me(): Promise<AxiosResponse<ResponseType<MeResponseType>>> {
+    return API.get<ResponseType<MeResponseType>>('/auth/me');
+  },
   login(
     data: LoginValuesType,
-  ): Promise<AxiosResponse<ResponseType<ResponseType<{ userId?: number }>>>> {
-    return API.post<ResponseType<ResponseType<{ userId?: number }>>>(
-      'auth/login',
-      data,
-    );
+  ): Promise<AxiosResponse<ResponseType<LoginResponseType>>> {
+    return API.post<ResponseType<LoginResponseType>>('auth/login', data);
   },
 };
 
@@ -136,6 +136,16 @@ type TasksResponseType = {
   items: Array<TaskType>;
   totalCount: number;
   error: string | null;
+};
+
+type MeResponseType = {
+  id: number;
+  email: string;
+  login: string;
+};
+
+type LoginResponseType = {
+  userId?: number;
 };
 
 export type ResponseType<D = Record<string, unknown>> = {

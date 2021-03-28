@@ -3,6 +3,7 @@ import {
   setAppErrorAC,
   AppStateType,
   appReducer,
+  setAppInitializedAC,
 } from './appReducer';
 
 describe('app reducer', () => {
@@ -12,6 +13,7 @@ describe('app reducer', () => {
     startState = {
       status: 'idle',
       error: null,
+      isInitialized: false,
     };
   });
 
@@ -25,5 +27,11 @@ describe('app reducer', () => {
     const endState = appReducer(startState, setAppErrorAC('some error'));
 
     expect(endState.error).toBe('some error');
+  });
+
+  it('should handle setAppInitializedAC', () => {
+    const endState = appReducer(startState, setAppInitializedAC(true));
+
+    expect(endState.isInitialized).toBeTruthy();
   });
 });

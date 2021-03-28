@@ -1,13 +1,13 @@
 /* eslint-disable import/no-cycle */
 import { ThunkType } from '../../app/store';
-/* eslint-enable import/no-cycle */
-
 import {
   handleServerAppError,
   handleServerNetworkError,
 } from '../../utils/errorUtils';
-import { LoginValuesType, authAPI, ResultCode } from '../../api/todolistsApi';
 import { setAppStatusAC } from '../../app/appReducer';
+/* eslint-enable import/no-cycle */
+
+import { LoginValuesType, authAPI, ResultCode } from '../../api/todolistsApi';
 
 export enum ActionType {
   SET_IS_LOGGED_IN = 'TL/LOGIN/SET_IS_LOGGED_IN',

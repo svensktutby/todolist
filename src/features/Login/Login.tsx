@@ -56,7 +56,7 @@ export const Login: FC = () => {
     formikHelpers: FormikHelpers<LoginValuesType>,
   ): void => {
     dispatch(loginAsync(values));
-    formikHelpers.resetForm();
+    if (isLoggedIn) formikHelpers.resetForm();
   };
 
   const formik = useFormik({
