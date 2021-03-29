@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Theme } from '@material-ui/core';
+import { Theme, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -21,12 +21,12 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     title: {
-      fontSize: '4rem',
+      paddingTop: theme.spacing(6),
+      paddingBottom: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.grey['50'],
     },
     text: {
-      fontSize: '3rem',
       textAlign: 'center',
       color: theme.palette.grey['50'],
     },
@@ -73,18 +73,20 @@ export const Error404: FC = () => {
   return (
     <div className={classes.root}>
       <div>
-        <h1 className={classes.title}>404 - Page not&nbsp;found</h1>
-        <h2 className={classes.text}>
+        <Typography variant="h2" component="h1" className={classes.title}>
+          404 - Page not&nbsp;found
+        </Typography>
+        <Typography variant="h2" component="p" className={classes.text}>
           —<span>Uh oh.</span> <span>¯\_(ツ)_/¯</span>—
-        </h2>
+        </Typography>
       </div>
       <footer className={classes.footer}>
-        <div className={classes.footerText}>
+        <Typography variant="body1" className={classes.footerText}>
           Take me back to:&nbsp;
           <Link className={classes.link} to="/">
             home page
           </Link>
-        </div>
+        </Typography>
       </footer>
     </div>
   );
