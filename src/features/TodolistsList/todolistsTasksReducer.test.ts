@@ -16,6 +16,7 @@ describe('todolists and tasks reducer', () => {
       addedDate: '',
       order: 0,
       filter: 'all',
+      entityStatus: 'idle',
     };
 
     const action = addTodolistAC(todolist);

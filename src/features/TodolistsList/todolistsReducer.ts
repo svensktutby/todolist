@@ -1,13 +1,13 @@
 /* eslint-disable import/no-cycle */
 import { ThunkType } from '../../app/store';
-/* eslint-enable import/no-cycle */
-
-import { ResultCode, todolistsAPI, TodolistType } from '../../api/todolistsApi';
 import { RequestStatusType, setAppStatusAC } from '../../app/appReducer';
 import {
   handleServerAppError,
   handleServerNetworkError,
 } from '../../utils/errorUtils';
+/* eslint-enable import/no-cycle */
+
+import { ResultCode, todolistsAPI, TodolistType } from '../../api/todolistsApi';
 
 export enum ActionType {
   REMOVE_TODOLIST = 'TL/TODOLISTS/REMOVE_TODOLIST',
@@ -193,6 +193,8 @@ export const changeTodolistTitleAsync = (
   id: string,
   title: string,
 ): ThunkType<ActionsType> => async (dispatch) => {
+  dispatch(changeTodolistEntityStatusAC(id, 'loading'));
+
   try {
     const {
       data: { resultCode, messages },
@@ -200,11 +202,14 @@ export const changeTodolistTitleAsync = (
 
     if (resultCode === ResultCode.Success) {
       dispatch(changeTodolistTitleAC(id, title));
+      dispatch(changeTodolistEntityStatusAC(id, 'succeeded'));
     } else {
       handleServerAppError(messages, dispatch);
+      dispatch(changeTodolistEntityStatusAC(id, 'failed'));
     }
   } catch (error) {
     handleServerNetworkError(error, dispatch);
+    dispatch(changeTodolistEntityStatusAC(id, 'failed'));
   }
 };
 

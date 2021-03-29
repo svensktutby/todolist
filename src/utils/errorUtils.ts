@@ -1,6 +1,8 @@
 import { Dispatch } from 'redux';
 
+/* eslint-disable import/no-cycle */
 import { setAppErrorAC, setAppStatusAC } from '../app/appReducer';
+/* eslint-enable import/no-cycle */
 
 export const handleServerAppError = (
   messages: Array<string>,

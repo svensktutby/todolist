@@ -6,6 +6,11 @@ import {
   removeTodolistAC,
   setTodolistsAC,
 } from './todolistsReducer';
+import { setAppErrorAC, setAppStatusAC } from '../../app/appReducer';
+import {
+  handleServerAppError,
+  handleServerNetworkError,
+} from '../../utils/errorUtils';
 /* eslint-enable import/no-cycle */
 
 import {
@@ -16,11 +21,6 @@ import {
   TaskType,
   UpdateTaskModelType,
 } from '../../api/todolistsApi';
-import { setAppErrorAC, setAppStatusAC } from '../../app/appReducer';
-import {
-  handleServerAppError,
-  handleServerNetworkError,
-} from '../../utils/errorUtils';
 
 export enum ActionType {
   REMOVE_TASK = 'TL/TASKS/REMOVE_TASK',
